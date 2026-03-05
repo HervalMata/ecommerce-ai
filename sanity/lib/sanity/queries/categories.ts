@@ -12,7 +12,7 @@ export const ALL_CATEGORIES_QUERY = defineQuery(`*[
             url
         },
         hotspot
-    }        
+    },        
 }`);
 
 export const CATEGORY_BY_SLUG_QUERY = defineQuery(`*[
@@ -28,5 +28,5 @@ export const CATEGORY_BY_SLUG_QUERY = defineQuery(`*[
             url
         },
         hotspot
-    }        
+    },        
 }`);

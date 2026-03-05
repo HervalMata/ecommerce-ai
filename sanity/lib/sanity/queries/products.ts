@@ -1,5 +1,27 @@
 import {defineQuery} from "groq";
 
+const PRODUCT_LIST_PROJECTION = `{
+    _id,
+    name,
+    "slug": slug.current,
+    price,
+    "image": images[0]{
+          asset->{
+               _id,
+               url
+          },
+          hotspot
+    },
+    category->{
+        _id,
+        title,
+        "slug": slug.current,
+    },
+    material,
+    color,
+    stock,
+}`
+
 export const ALL_PRODUCTS_QUERY = defineQuery(`*[
     _type == "product"
 ]   | order(name asc) {
@@ -15,7 +37,7 @@ export const ALL_PRODUCTS_QUERY = defineQuery(`*[
                url
           },
           hotspot
-    }
+    },
     category->{
         _id,
         title,
@@ -39,13 +61,13 @@ export const FEATURED_PRODUCTS_QUERY = defineQuery(`*[
     "slug": slug.current,
     description,
     price,
-    "images": images[0]{
+    "image": images[0]{
           asset->{
                _id,
                url
           },
           hotspot
-    }
+    },
     category->{
         _id,
         title,
@@ -62,13 +84,13 @@ export const PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`*[
     name,
     "slug": slug.current,
     price,
-    "images": images[0]{
+    "image": images[0]{
           asset->{
                _id,
                url
           },
           hotspot
-    }
+    },
     category->{
         _id,
         title,
@@ -95,7 +117,7 @@ export const PRODUCT_BY_SLUG_QUERY = defineQuery(`*[
                url
           },
           hotspot
-    }
+    },
     category->{
         _id,
         title,
@@ -115,18 +137,22 @@ export const SEARCH_PRODUCTS_QUERY = defineQuery(`*[
         name match $searchQuery + "*"
         || description match $searchQuery + "*"
     )
-]   | order(name asc) {
+] | score(
+    boost(name match $searchQuery + "*", 3)
+    boost(description match $searchQuery + "*", 1)
+)  | order(score desc) {
     _id,
+    _score,
     name,
     "slug": slug.current,
     price,
-    "images": images[0]{
+    "image": images[0]{
           asset->{
                _id,
                url
           },
           hotspot
-    }
+    },
     category->{
         _id,
         title,
@@ -137,31 +163,119 @@ export const SEARCH_PRODUCTS_QUERY = defineQuery(`*[
     stock,
 }`);
 
-export const FILTER_PRODUCTS_QUERY = defineQuery(`*[
+export const FILTER_PRODUCTS_BY_NAME_QUERY = defineQuery(`*[
     _type == "product"
-    && ($categorySlug == "" | $category->Slug.current == $categorySlug)
+    && ($categorySlug == "" || $category->slug.current == $categorySlug)
     && ($color == "" || $color == $color)
     && ($material == "" || $material == $material)
-    && ($minPrice == "" || $price == $minPrice)
-    && ($maxPrice == "" || $price == $maxPrice)
-]   | order(
-    select(
-        $sortBy == "price_asc" => price asc,
-        $sortBy == "price_desc" => price desc,
-        name asc
-    )
- ){
+    && ($minPrice == 0 || $price >= $minPrice)
+    && ($maxPrice == 0 || $price <= $maxPrice)
+    && (searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*") 
+]   | order(name asc){
     _id,
     name,
     "slug": slug.current,
     price,
-    "images": images[0]{
+    "image": images[0]{
           asset->{
                _id,
                url
           },
           hotspot
-    }
+    },
+    category->{
+        _id,
+        title,
+        "slug": slug.current,
+    },
+    material,
+    color,
+    stock,
+}`);
+
+export const FILTER_PRODUCTS_BY_PRICE_ASC_QUERY = defineQuery(`*[
+    _type == "product"
+    && ($categorySlug == "" | $category->Slug.current == $categorySlug)
+    && ($color == "" || $color == $color)
+    && ($material == "" || $material == $material)
+    && ($minPrice == 0 || $price >= $minPrice)
+    && ($maxPrice == 0 || $price <= $maxPrice)
+    && (searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*") 
+]   | order(price asc){
+    _id,
+    name,
+    "slug": slug.current,
+    price,
+    "image": images[0]{
+          asset->{
+               _id,
+               url
+          },
+          hotspot
+    },
+    category->{
+        _id,
+        title,
+        "slug": slug.current,
+    },
+    material,
+    color,
+    stock,
+}`);
+
+export const FILTER_PRODUCTS_BY_PRICE_DESC_QUERY = defineQuery(`*[
+    _type == "product"
+    && ($categorySlug == "" | $category->Slug.current == $categorySlug)
+    && ($color == "" || $color == $color)
+    && ($material == "" || $material == $material)
+    && ($minPrice == 0 || $price >= $minPrice)
+    && ($maxPrice == 0 || $price <= $maxPrice)
+    && (searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*") 
+]   | order(price desc){
+    _id,
+    name,
+    "slug": slug.current,
+    price,
+    "image": images[0]{
+          asset->{
+               _id,
+               url
+          },
+          hotspot
+    },
+    category->{
+        _id,
+        title,
+        "slug": slug.current,
+    },
+    material,
+    color,
+    stock,
+}`);
+
+export const FILTER_PRODUCTS_BY_RELEVANCE_QUERY = defineQuery(`*[
+    _type == "product"
+    && ($categorySlug == "" | $category->Slug.current == $categorySlug)
+    && ($color == "" || $color == $color)
+    && ($material == "" || $material == $material)
+    && ($minPrice == 0 || $price >= $minPrice)
+    && ($maxPrice == 0 || $price <= $maxPrice)
+    && (searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*") 
+]  | score(
+    boost(name match $searchQuery + "*", 3)
+    boost(description match $searchQuery + "*", 1)
+)  | order(_score desc,name asc){
+    _id,
+    name,
+    "slug": slug.current,
+    price,
+    "image": images[0]{
+          asset->{
+               _id,
+               url
+          },
+          hotspot
+    },
     category->{
         _id,
         title,
@@ -180,13 +294,13 @@ export const PRODUCTS_BY_IDS_QUERY = defineQuery(`*[
     name,
     "slug": slug.current,
     price,
-    "images": images[0]{
+    "image": images[0]{
           asset->{
                _id,
                url
           },
           hotspot
-    }
+    },
     stock,
 }`);
 
@@ -199,13 +313,13 @@ export const LOW_STOCK_PRODUCTS_QUERY = defineQuery(`*[
     name,
     "slug": slug.current,
     stock,
-    "images": images[0]{
+    "image": images[0]{
           asset->{
                _id,
                url
           },
           hotspot
-    }
+    },
 }`);
 
 export const OUT_OF_STOCK_PRODUCTS_QUERY = defineQuery(`*[
@@ -215,11 +329,11 @@ export const OUT_OF_STOCK_PRODUCTS_QUERY = defineQuery(`*[
     _id,
     name,
     "slug": slug.current,
-    "images": images[0]{
+    "image": images[0]{
           asset->{
                _id,
                url
           },
           hotspot
-    }
+    },
 }`);

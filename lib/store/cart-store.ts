@@ -1,5 +1,4 @@
 import {createStore} from "zustand/vanilla";
-import {persist} from "zustand/middleware/persist";
 
 export interface CartItem {
     productId: string;
@@ -35,7 +34,6 @@ export const createCartStore = (
     initState: CartState = defaultInitState,
 ) => {
     return createStore<CartStore>()(
-        persist(
             (set,get) => ({
                 ...initState,
 
@@ -88,10 +86,5 @@ export const createCartStore = (
 
                 closeCart: () => set({ isOpen: false }),
             }),
-            {
-                name: "cart-storage",
-                partialize: (state) => ({ items: state.items }),
-            }
         )
-    )
 }

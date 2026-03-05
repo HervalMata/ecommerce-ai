@@ -2,6 +2,7 @@
 
 import {createContext, ReactNode, useContext, useRef} from "react";
 import {CartState, CartStore, createCartStore, defaultInitState} from "@/lib/store/cart-store";
+import {useStore} from "zustand";
 
 export type CartStoreApi = ReturnType<typeof createCartStore>;
 
@@ -35,9 +36,10 @@ export const useCartStore = <T,>(selector: (store: CartStore) => T): T => {
         throw new Error("useCartStore must be used within CartStoreProvider");
     }
 
-    // @ts-ignore
     return useStore(cartStoreContext, selector);
 };
+
+export const useCartItems = () => useCartStore((state) => state.items);
 
 export const useCartIsOpen = () => useCartStore((state) => state.isOpen);
 
@@ -52,13 +54,22 @@ export const useCartItem = (productId: string) =>
         state.items.find((item: any) => item.productId === productId)
     );
 
-export const useCartActions = () =>
-    useCartStore((state) => ({
-        addItem: state.addItem,
-        removeItem: state.removeItem,
-        updateQuantity: state.updateQuantity,
-        clearCart: state.clearCart,
-        toggleCart: state.toggleCart,
-        openCart: state.openCart,
-        closeCart: state.closeCart,
-    }))
+export const useCartActions = () => {
+    const addItem = useCartStore((state) => state.addItem);
+    const removeItem = useCartStore((state) => state.removeItem);
+    const updateQuantity = useCartStore((state) => state.updateQuantity);
+    const clearCart = useCartStore((state) => state.clearCart);
+    const toggleCart = useCartStore((state) => state.toggleCart);
+    const openCart = useCartStore((state) => state.openCart);
+    const closeCart = useCartStore((state) => state.closeCart);
+
+    return {
+        addItem,
+        removeItem,
+        updateQuantity,
+        clearCart,
+        toggleCart,
+        openCart,
+        closeCart,
+    }
+}
