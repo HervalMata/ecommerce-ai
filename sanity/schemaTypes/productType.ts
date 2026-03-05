@@ -102,11 +102,15 @@ export const productType = defineType({
             validation: (rule) => [rule.min(1).error("At least one image is required")],
         }),
         defineField({
-            name: "inStock",
-            type: "boolean",
+            name: "stock",
+            type: "number",
             group: "inventory",
-            initialValue: true,
-            description: 'Is this product currently available?',
+            initialValue: 0,
+            description: 'Number of items in stock',
+            validation: (rule) => [
+                rule.min(0).error("Product stock cannot be negative"),
+                rule.integer().error("Product stock must be a whole number"),
+            ],
         }),
         defineField({
             name: "featured",
