@@ -45,7 +45,7 @@ export function ProductCard(
                             alt={product.name ?? "Imagem do Produto"}
                             fill
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw)"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
                         />
                     ) : (
                         <div className="flex h-full items-center justify-center text-zinc-400">

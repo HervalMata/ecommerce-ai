@@ -282,12 +282,13 @@ export function ProductFilters(
                 </span>
                 <Select
                     value={currentSort || "all"}
-                    onValueChange={(value) => updateParams({ sort: value })}
+                    onValueChange={(value) => updateParams({ sort: value === "all" ? null : value })}
                 >
                     <SelectTrigger>
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
+                        <SelectItem value="all">Padrão</SelectItem>
                         {SORT_OPTIONS.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                                 {option.label}
