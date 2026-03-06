@@ -13,7 +13,12 @@ export function CartSheet() {
     const { clearCart } = useCartActions();
 
     return (
-        <Sheet open={isOpen} onOpenChange={(open) => !open && clearCart()}>
+        <Sheet 
+            open={isOpen} 
+            onOpenChange={(open) => {
+                if (!open) clearCart();
+            }}
+        >
             <SheetContent className="flex w-full flex-col sm:max-w-lg">
                 <SheetHeader>
                     <SheetTitle className="flex items-center gap-2">

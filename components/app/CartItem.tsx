@@ -68,7 +68,7 @@ export function CartItem(
                         onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                     >
                         <Minus className="h-3 w-3" />
-                        <span className="sr-only">Diminiuir Quantidade</span>
+                        <span className="sr-only">Diminuir Quantidade</span>
                     </Button>
                     <span className="w-8 text-center text-sm">{item.quantity}</span>
                     <Button

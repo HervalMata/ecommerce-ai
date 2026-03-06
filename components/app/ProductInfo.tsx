@@ -158,6 +158,8 @@ export function ProductInfo(
                     </span>
                     <div className="flex items-center rounded-lg border border-zinc-200 dark:border-zinc-700">
                         <button
+                            type="button"
+                            aria-label="Diminuir Quantidade"
                             onClick={decrementQuantity}
                             disabled={quantity <= 1 || isOutOfStock}
                             className="p-2 text-zinc-500 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:hover:text-zinc-100"
@@ -168,6 +170,8 @@ export function ProductInfo(
                             {quantity}
                         </span>
                         <button
+                            type="button"
+                            aria-label="Aumentar Quantidade"
                             onClick={incrementQuantity}
                             disabled={quantity >= (product.stock ?? 1) || isOutOfStock}
                             className="p-2 text-zinc-500 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:hover:text-zinc-100"

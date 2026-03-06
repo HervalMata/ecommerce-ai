@@ -25,7 +25,14 @@ export function CartSummary() {
                 </Button>
             </div>
             <div className="mt-3 text-center">
-                Continue Comprando →
+                <Link
+                    href="/"
+                    className="text-sm font-medium text-zinc-700 hover:text-zinc-900 
+                    dark:text-zinc-300 dark:hover:text-zinc-100"
+                >
+                    Continue Comprando →
+                </Link>    
+                
             </div>
         </div>
     )
