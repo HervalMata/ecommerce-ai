@@ -21,7 +21,7 @@ export async function CheckoutButton({ disabled }:CheckoutButtonProps) {
     const handleCheckout = () => {
         setError(null);
 
-        staetTransition(async () => {
+        startTransition(async () => {
             const result = await createCheckoutSession(items);
 
             if (result.success && result.url) {
