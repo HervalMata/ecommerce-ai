@@ -13,7 +13,7 @@ interface CheckoutButtonProps {
 }
 
 export async function CheckoutButton({ disabled }:CheckoutButtonProps) {
-    const roiuter = useRouter();
+    const router = useRouter();
     const items = useCartItems();
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string | null>(null);
