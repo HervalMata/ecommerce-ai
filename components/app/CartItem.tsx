@@ -21,15 +21,15 @@ export function CartItem(
 
     const isOutOfStock = stockInfo?.isOutOfStock ?? false;
     const exceedsStock = stockInfo?.exceedStock ?? false;
-    const currentStock = stockInfo?.currentStock ?? false;
+    const currentStock = stockInfo?.currentStock ?? Infinity;
     const hasIssue = isOutOfStock || exceedsStock;
 
     const atMaxStock =
-        !isOutOfStock && !exceedsStock && !item.quantity >= currentStock;
+        !isOutOfStock && !exceedsStock && item.quantity >= currentStock;
 
     const remainingAfterPurchase = currentStock - item.quantity;
     const isLowStock = 
-        !isOutOfStock && !exceedsStock && currentStock <= 3 && remainingAfterPurchase >= 0;    
+        !isOutOfStock && !exceedsStock && Number.isFinite(currentStock) && currentStock <= 3 && remainingAfterPurchase >= 0;    
 
     return (
         <div className={cn(
@@ -145,7 +145,7 @@ export function CartItem(
                         size="icon"
                         className="h-7 w-7"
                         onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                        disabled={isOutOfStock || item.quantity >= currentStock}
+                        disabled={isOutOfStock || Number.isFinite(currentStock) && item.quantity >= currentStock}
                     >
                         <Plus className="h-3 w-3" />
                         <span className="sr-only">Aumentar Quantidade</span>
