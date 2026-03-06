@@ -27,8 +27,8 @@ interface CheckoutResult {
 }
 
 export async function createCheckoutSession(
-    items: CartItem[] | undefined
-): Promise<CheckoutResult> {
+    items: CartItem[]
+): Promise<CheckoutResult | undefined> {
     try {
         const { userId } = await auth();
         const user = await currentUser();
