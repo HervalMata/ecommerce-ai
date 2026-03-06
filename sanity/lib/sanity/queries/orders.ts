@@ -2,19 +2,20 @@ import {defineQuery} from "groq";
 
 export const ORDERS_BY_USER_QUERY = defineQuery(`*[
     _type == "order"
-    && clerkUserId == $userId
+    && clerkUserId == $clerkUserId
 ] | order(createdAt desc) {
     _id,
     orderNumber,
     total,
     status,
     createdAt,
-    "itemCount": count(items)      
+    "itemCount": count(items),
+    "itemNames: items[].product->name      
 }`);
 
 export const ORDERS_BY_ID_QUERY = defineQuery(`*[
     _type == "order"
-    && _id == $orderId
+    && _id == $id
 ][0] {
     _id,
     orderNumber,
@@ -59,3 +60,8 @@ export const RECENTS_ORDERS_QUERY = defineQuery(`*[
     status,
     createdAt,   
 }`);
+
+export const ORDER_BY_STRIPE_PAYMENT_ID_QUERY = defineQuery(`*[
+    _type == "order 
+    && stripePaymentId == $stripePaymentId   
+][0]{_id}`);

@@ -4,6 +4,7 @@ import {CartStoreProvider} from "@/lib/store/cart-store-provider";
 import {SanityLive} from "@/sanity/lib/live";
 import {Header} from "@/components/app/Header";
 import {CartSheet} from "@/components/app/CartSheet";
+import { Toaster } from '@/components/ui/sonner';
 
 function Layout({ children }: { children: ReactNode }) {
   return (
@@ -12,6 +13,7 @@ function Layout({ children }: { children: ReactNode }) {
             <Header />
             <main>{children}</main>
             <CartSheet />
+            <Toaster />
             <SanityLive />
         </CartStoreProvider>
     </ClerkProvider>

@@ -1,7 +1,7 @@
 "use client"
 
 import type { FILTER_PRODUCTS_BY_NAME_QUERYResult} from "@/sanity.types";
-import {useCartActions} from "@/lib/store/cart-store-provider";
+import {useCartActions, useCartItems} from "@/lib/store/cart-store-provider";
 import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
@@ -20,6 +20,7 @@ export function ProductCard(
     { product }: ProductCardProps
 ) {
     const { addItem, openCart } = useCartActions();
+    const cartItems = useCartItems();
     const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null);
     const images = product.images ?? [];
     const mainImageUrl = images[0]?.asset?.url;
@@ -29,10 +30,16 @@ export function ProductCard(
             : mainImageUrl;
 
     const hasMultipleImages = images.length > 1;
-    const isOutOfStock = (product.stock ?? 0) <= 0;
+    const stock = product.stock ?? 0;
+    const cartItem = cartItems.find((item) => item.productId === product._id);
+    const quantityInCart = cartItem?.quantity ?? 0;
+    const availableToAdd = stock - quantityInCart;
+
+    const isOutOfStock = stock <= 0;
+    const isMaxInCart = availableToAdd <= 0 && !isOutOfStock;
 
     const handleAddToCart = () => {
-        if (isOutOfStock) return;
+        if (isOutOfStock || isMaxInCart) return;
 
         addItem({
             productId: product._id,
@@ -118,14 +125,19 @@ export function ProductCard(
                 </p>
             </CardContent>
 
-            <CardFooter className="p-4 pt-0">
+            <CardFooter className="flex flex-col gap-2 p-4 pt-0">
+                {quantityInCart > 0 && (
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                        {quantityInCart} no Carrinho de compras
+                    </p>
+                )}
                 <Button
                     onClick={handleAddToCart}
-                    disabled={isOutOfStock}
+                    disabled={isOutOfStock || isMaxInCart}
                     className="w-full"
-                    variant={isOutOfStock ? "secondary" : "default"}
+                    variant={isOutOfStock || isMaxInCart ? "secondary" : "default"}
                 >
-                    {isOutOfStock ? "Fora de Estoque" : "Adicionar para o Carrinho"}
+                    {isOutOfStock ? "Fora de Estoque" : isMaxInCart ? "Máximo de produtos no carrinho" : "Adicionar para o Carrinho"}
                 </Button>
             </CardFooter>
         </Card>

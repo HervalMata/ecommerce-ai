@@ -130,7 +130,7 @@ carrinho
             {/* InCart Indicator */}
             {quantityInCart > 0 && (
                 <div className="mt-3 flex items-center gap-2 rounded-lg bg-zinc-100 px-3 py-2 dark:bg-zinc-800">
-                    <ShoppinCart className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
+                    <ShoppingCart className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
                     <span className="text-sm text-zinc-600 dark:text-zinc-400">
                         {quantityInCart} já em seu carrinho
                     </span>
