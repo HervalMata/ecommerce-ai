@@ -7,6 +7,8 @@ import Link from "next/link";
 import Image from "next/image";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
+import {useState} from "react";
+import {cn} from "@/lib/utils";
 
 type Product = FILTER_PRODUCTS_BY_NAME_QUERYResult[number];
 
@@ -18,8 +20,15 @@ export function ProductCard(
     { product }: ProductCardProps
 ) {
     const { addItem, openCart } = useCartActions();
+    const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null);
+    const images = product.images ?? [];
+    const mainImageUrl = images[0]?.asset?.url;
+    const displayedImageUrl =
+        hoveredImageIndex !== null
+            ? images[hoveredImageIndex]?.asset?.url
+            : mainImageUrl;
 
-    const imageUrl = product.image?.asset?.url;
+    const hasMultipleImages = images.length > 1;
     const isOutOfStock = (product.stock ?? 0) <= 0;
 
     const handleAddToCart = () => {
@@ -29,7 +38,7 @@ export function ProductCard(
             productId: product._id,
             name: product.name ?? "Produto desconhecido",
             price: product.price ?? 0,
-            image: imageUrl ?? undefined,
+            image: mainImageUrl ?? undefined,
         });
 
         openCart();
@@ -39,13 +48,13 @@ export function ProductCard(
         <Card className="group overflow-hidden border-zinc-200 bg-white transition-all hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
             <Link href={`/products/${product.slug}`}>
                 <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-900">
-                    {imageUrl ? (
+                    {displayedImageUrl ? (
                         <Image
-                            src={imageUrl}
+                            src={displayedImageUrl}
                             alt={product.name ?? "Imagem do Produto"}
                             fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw)"
+                            className="object-cover transition-all duration-300 group-hover:scale-105"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
                         />
                     ) : (
                         <div className="flex h-full items-center justify-center text-zinc-400">
@@ -62,6 +71,36 @@ export function ProductCard(
                     )}
                 </div>
             </Link>
+
+            {/* Thumbnail Images */}
+            {hasMultipleImages && (
+                <div className="flex gap-1 border-t border-zinc-100 bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-900">
+                    {images.map((image, index) => (
+                        <button
+                            key={image._key ?? index}
+                            type="button"
+                            className={cn(
+                                "relative h-12 flex-1 overflow-hidden rounded-md transition-all",
+                                hoveredImageIndex === index
+                                    ? "ring-2 ring-zinc-900 dark:ring-zinc-100"
+                                    : "opacity-60 hover:opacity-100"
+                            )}
+                            onMouseEnter={() => setHoveredImageIndex(index)}
+                            onMouseLeave={() => setHoveredImageIndex(null)}
+                        >
+                            {image.asset?.url && (
+                                <Image
+                                    src={image.asset.url}
+                                    alt={`${product.name}`}
+                                    fill
+                                    className="object-cover"
+                                    sizes="80px"
+                                />
+                            )}
+                        </button>
+                    ))}
+                </div>
+            )}
 
             <CardContent className="p-4">
                 <Link href={`/products/${product.slug}`}>

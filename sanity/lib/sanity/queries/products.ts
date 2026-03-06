@@ -176,12 +176,12 @@ export const FILTER_PRODUCTS_BY_NAME_QUERY = defineQuery(`*[
     name,
     "slug": slug.current,
     price,
-    "image": images[0]{
+    "images": images[0...4]{
+          _key,
           asset->{
                _id,
                url
           },
-          hotspot
     },
     category->{
         _id,
@@ -206,12 +206,12 @@ export const FILTER_PRODUCTS_BY_PRICE_ASC_QUERY = defineQuery(`*[
     name,
     "slug": slug.current,
     price,
-    "image": images[0]{
+    "images": images[0...4]{
+          _key,
           asset->{
                _id,
                url
           },
-          hotspot
     },
     category->{
         _id,
@@ -236,12 +236,12 @@ export const FILTER_PRODUCTS_BY_PRICE_DESC_QUERY = defineQuery(`*[
     name,
     "slug": slug.current,
     price,
-    "image": images[0]{
+    "images": images[0...4]{
+            _key,
           asset->{
                _id,
                url
           },
-          hotspot
     },
     category->{
         _id,
@@ -269,12 +269,12 @@ export const FILTER_PRODUCTS_BY_RELEVANCE_QUERY = defineQuery(`*[
     name,
     "slug": slug.current,
     price,
-    "image": images[0]{
+    "images": images[0...4]{
+        _key,
           asset->{
                _id,
                url
           },
-          hotspot
     },
     category->{
         _id,
