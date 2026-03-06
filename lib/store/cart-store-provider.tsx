@@ -1,6 +1,12 @@
 "use client"
 
-import {createContext, ReactNode, useContext, useRef} from "react";
+import {
+    createContext, 
+    type ReactNode, 
+    useContext, 
+    useRef,
+    useEffect
+} from "react";
 import {CartState, CartStore, createCartStore, defaultInitState} from "@/lib/store/cart-store";
 import {useStore} from "zustand";
 
@@ -21,6 +27,10 @@ export const CartStoreProvider = (
     if (storeRef.current === null) {
         storeRef.current = createCartStore(initialState ?? defaultInitState);
     }
+
+    useEffect(() => {
+        storeRef.current?.persist.rehydrate();
+    }, []);
 
     return (
         <CartStoreContext.Provider value={storeRef.current}>
