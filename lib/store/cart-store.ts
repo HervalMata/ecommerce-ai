@@ -1,4 +1,5 @@
 import {createStore} from "zustand/vanilla";
+import { persist } from "zustand/middleware";
 
 export interface CartItem {
     productId: string;
@@ -14,7 +15,7 @@ export interface CartState {
 }
 
 export interface CartActions {
-    addItem: (item: Omit<CartItem, "quantity">) => void;
+    addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
     removeItem: (productId: string) => void;
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
@@ -34,10 +35,11 @@ export const createCartStore = (
     initState: CartState = defaultInitState,
 ) => {
     return createStore<CartStore>()(
+        persist(
             (set,get) => ({
                 ...initState,
 
-                addItem: (item) =>
+                addItem: (item, quantity = 1) =>
                     set((state) => {
                         const existingItem = state.items.find(
                             (i) => i.productId === item.productId
@@ -47,14 +49,14 @@ export const createCartStore = (
                             return {
                                 items: state.items.map((i) =>
                                     i.productId === item.productId
-                                        ? { ...i, quantity: i.quantity + 1 }
+                                        ? { ...i, quantity: i.quantity + quantity }
                                         : i
                                 ),
                             }
                         }
 
                         return {
-                            items: [ ...state.items, { ...item, quantity: 1 }],
+                            items: [ ...state.items, { ...item, quantity }],
                         };
                     }),
 
@@ -86,5 +88,11 @@ export const createCartStore = (
 
                 closeCart: () => set({ isOpen: false }),
             }),
+            {
+                name: "cart-storage",
+                skipHydration: true,
+                partialize: (state) => ({ item: state.items }),
+            }
         )
-}
+    );
+};

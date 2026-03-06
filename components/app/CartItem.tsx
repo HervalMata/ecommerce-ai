@@ -5,21 +5,42 @@ import {useCartActions} from "@/lib/store/cart-store-provider";
 import Image from "next/image";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {Minus, Plus, Trash2} from "lucide-react";
+import {AlertCircle, Minus, Plus, Trash2} from "lucide-react";
+import type { StockInfo } from "@/lib/hooks/useCartStock";
+import { cn } from "@/lib/utils";
 
 interface CartItemProps {
     item: CartItemType;
+    stockInfo?: StockInfo;
 }
 
 export function CartItem(
-    { item }: CartItemProps
+    { item, stockInfo }: CartItemProps
 ) {
     const { updateQuantity, removeItem } = useCartActions();
 
+    const isOutOfStock = stockInfo?.isOutOfStock ?? false;
+    const exceedsStock = stockInfo?.exceedStock ?? false;
+    const currentStock = stockInfo?.currentStock ?? false;
+    const hasIssue = isOutOfStock || exceedsStock;
+
+    const atMaxStock =
+        !isOutOfStock && !exceedsStock && !item.quantity >= currentStock;
+
+    const remainingAfterPurchase = currentStock - item.quantity;
+    const isLowStock = 
+        !isOutOfStock && !exceedsStock && currentStock <= 3 && remainingAfterPurchase >= 0;    
+
     return (
-        <div className="flex gap-4 py-4">
+        <div className={cn(
+            "flex gap-4 py-4",
+            hasIssue && "rounded-lg bg-red-50 p-3 dark:bg-red-950/30",
+        )}>
             {/* Image */}
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
+            <div className={cn(
+                "relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800",
+                isOutOfStock && "opacity-50",
+            )}>
                 {item.image ? (
                     <Image
                         src={item.image}
@@ -40,7 +61,10 @@ export function CartItem(
                 <div className="flex justify-between">
                     <Link
                         href={`/products/${item.productId}`}
-                        className="font-medium text-zinc-900 hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300"
+                        className={cn(
+                            "font-medium text-zinc-900 hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300",
+                            isOutOfStock && "text-zinc-400 dark:text-zinc-500",
+                        )}
                     >
                         {item.name}
                     </Link>
@@ -59,6 +83,44 @@ export function CartItem(
                     R$ {item.price.toLocaleString("pt-BR")}
                 </p>
 
+                {/* Stock Messages */}
+                {isOutOfStock && (
+                    <div className="mt-2 flex items-center gap-1.5 text-sm font-medium text-amber-600 dark:text-amber-400">
+                        <AlertCircle className="h-4 w-4" />
+                        Sem Estoque - Por favor remova este item
+                    </div>
+                )}
+
+                {exceedsStock && !isOutOfStock && (
+                    <div className="mt-2 flex items-center gap-1.5 text-sm font-medium text-amber-600 dark:text-amber-400">
+                        <AlertCircle className="h-4 w-4" />
+                        {currentStock === 1
+                            ? "Somente 1 restando - Por favor reduza a quantidade para 1"
+                            : `Somente ${currentStock} em estoque - Por favor reduza a quantidade`
+                        }    
+                    </div>
+                )}
+
+                {atMaxStock && (
+                    <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+                        <AlertCircle className="h-4 w-4" />
+                        {currentStock === 1
+                            ? "Você terá o último"
+                            : `Você terá o último ${currentStock} em estoque!`
+                        }    
+                    </div>
+                )}
+
+                {isLowStock && !atMaxStock && (
+                    <div className="mt-2 text-xs text-amber-600 dark:text-amber-400">
+                        <AlertCircle className="h-4 w-4" />
+                        {currentStock === 1
+                            ? "Somente 1 restando - Por favor reduza a quantidade para 1"
+                            : `Somente ${currentStock} em estoque - Por favor reduza a quantidade`
+                        }    
+                    </div>
+                )}
+
                 {/* Quantity Controls */}
                 <div className="mt-2 flex items-center gap-2">
                     <Button
@@ -66,16 +128,24 @@ export function CartItem(
                         size="icon"
                         className="h-7 w-7"
                         onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                        disabled={isOutOfStock}
                     >
                         <Minus className="h-3 w-3" />
                         <span className="sr-only">Diminuir Quantidade</span>
                     </Button>
-                    <span className="w-8 text-center text-sm">{item.quantity}</span>
+                    <span 
+                        className={cn(
+                            "w-8 text-center text-sm",
+                            exceedsStock && "font-medium text-amber-600 dark:text-amber-400"
+                    )}>
+                        {item.quantity}
+                    </span>
                     <Button
                         variant="outline"
                         size="icon"
                         className="h-7 w-7"
                         onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                        disabled={isOutOfStock || item.quantity >= currentStock}
                     >
                         <Plus className="h-3 w-3" />
                         <span className="sr-only">Aumentar Quantidade</span>
