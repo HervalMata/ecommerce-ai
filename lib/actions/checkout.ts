@@ -51,7 +51,7 @@ export async function createCheckoutSession(
         const validateItems: {
             product: (typeof products)[number];
             quantity: number;
-        }[] = []:
+        }[] = [];
 
         for (const item in items) {
             

@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         return NextResponse.json(
             { error: "Missing stripe-signature header"},
             { status: 400 },
-        ),
+        );
     }
 
     let event: Stripe.Event;

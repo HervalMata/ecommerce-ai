@@ -1,4 +1,4 @@
-import { auth } "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Package, ArrowRight, ShoppingBag } from "lucide-react";
