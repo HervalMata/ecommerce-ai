@@ -2,7 +2,7 @@
 
 import { useCartActions } from "@/lib/store/cart-store-provider";
 import { useEffect } from "react";
-import { CherckCircle, Package, ArrowRight } from "lucide-react";
+import { CheckCircle, Package, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -41,7 +41,7 @@ export default async function SuccessClient({ session }:SuccessClientProps) {
     return (
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="text-center">
-                <CherckCircle className="mx-auto h-16 w-16 text-green-500" />
+                <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
                 <h1 className="mt-4 text-3xl font-bold text-zinc-900 dark:text-zinc-100">
                     Ordem Comfirmada!
                 </h1>
