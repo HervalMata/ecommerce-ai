@@ -24,7 +24,7 @@ export async function CheckoutButton({ disabled }:CheckoutButtonProps) {
         startTransition(async () => {
             const result = await createCheckoutSession(items);
 
-            if (result.success && result.url) {
+            if (result?.success && result?.url && result !== undefined) {
                 router.push(result.url);
             } else {
                 setError(result.error ?? "Falha no checkout");
