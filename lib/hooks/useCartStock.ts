@@ -2,7 +2,7 @@
 
 import { client } from "@/sanity/lib/client";
 import { CartItem } from "../store/cart-store";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { PRODUCTS_BY_IDS_QUERY } from "@/sanity/lib/sanity/queries/products";
 
 export interface StockInfo {
@@ -25,6 +25,7 @@ interface UseCartStockReturn {
 export function useCartStock(items: CartItem[]): UseCartStockReturn {
     const [stockMap, setStockMap] = useState<StockMap>(new Map());
     const [isLoading, setIsLoading] = useState(false);
+    const requestIdRef = useRef(0);
 
     const productIds = useMemo(
         () => items.map((item) => item.productId),
@@ -32,8 +33,10 @@ export function useCartStock(items: CartItem[]): UseCartStockReturn {
     );
 
     const fetchStock = useCallback(async () => {
+        const requestId = ++requestIdRef.current;
         if (items.length === 0) {
             setStockMap(new Map());
+            setIsLoading(false);
             return;
         }
 
@@ -43,6 +46,8 @@ export function useCartStock(items: CartItem[]): UseCartStockReturn {
             const products = await client.fetch(PRODUCTS_BY_IDS_QUERY, {
                 ids: productIds,
             });
+
+            if (requestId !== requestIdRef.current) return;
 
             const newStockMap = new Map<string, StockInfo>();
 
@@ -66,7 +71,9 @@ export function useCartStock(items: CartItem[]): UseCartStockReturn {
         } catch (error) {
             console.error("Falha ao careegar o estoque: ", error);
         } finally {
-            setIsLoading(false);
+            if (requestId === requestIdRef.current) {
+                setIsLoading(false);
+            }
         }
     }, [items, productIds]);
 

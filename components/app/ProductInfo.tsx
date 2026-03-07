@@ -5,7 +5,7 @@ import {useState, useEffect} from "react";
 import {useCartActions, useCartItem} from "@/lib/store/cart-store-provider";
 import Link from "next/link";
 import {Badge} from "@/components/ui/badge";
-import {Check, Minus, Plus, ShoppingBag, ShoppinCart} from "lucide-react";
+import {Check, Minus, Plus, ShoppingBag, ShoppingCart} from "lucide-react";
 import {Button} from "@/components/ui/button";
 
 interface ProductInfoProps {
@@ -103,7 +103,8 @@ export function ProductInfo(
                         variant="secondary"
                         className="bg-blue-100 text-blue-800"
                     >
-                        Todo os {totalStock} produtos no seu carrinho
+                        Todos os {totalStock} produtos no seu  
+carrinho
                     </Badge>
                 ) : remainingStock <= 5 ? (
                     <Badge
@@ -129,7 +130,7 @@ export function ProductInfo(
             {/* InCart Indicator */}
             {quantityInCart > 0 && (
                 <div className="mt-3 flex items-center gap-2 rounded-lg bg-zinc-100 px-3 py-2 dark:bg-zinc-800">
-                    <ShoppinCart className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
+                    <ShoppingCart className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
                     <span className="text-sm text-zinc-600 dark:text-zinc-400">
                         {quantityInCart} já em seu carrinho
                     </span>
@@ -227,7 +228,7 @@ export function ProductInfo(
                         </button>
                     </div>
                     {quantity >= remainingStock && remainingStock > 0 && (
-                        <span className="text-xs text-zinc-500">Maximo disponivel</span>
+                        <span className="text-xs text-zinc-500">Máximo disponível</span>
                     )}
                 </div>
                 )}

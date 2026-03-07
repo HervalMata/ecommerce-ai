@@ -91,7 +91,7 @@ export const createCartStore = (
             {
                 name: "cart-storage",
                 skipHydration: true,
-                partialize: (state) => ({ item: state.items }),
+                partialize: (state) => ({ items: state.items }),
             }
         )
     );
