@@ -104,7 +104,7 @@ export const PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`*[
 export const PRODUCT_BY_SLUG_QUERY = defineQuery(`*[
     _type == "product"
     && slug.current == $slug
-]   | order(name asc) {
+][0] {
     _id,
     name,
     "slug": slug.current,
