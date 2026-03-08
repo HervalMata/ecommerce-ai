@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {ShoppingBag, User} from "lucide-react";
+import {ShoppingBag, User, Package} from "lucide-react";
 import {useCartActions, useTotalItems} from "@/lib/store/cart-store-provider";
 import {SignedIn, SignedOut, UserButton, SignInButton} from "@clerk/nextjs";
 
@@ -22,6 +22,17 @@ export function Header() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2">
+                    {/* MyOrders - Only when signed in */}                 
+                    <SignedIn>
+                        <Button asChild>
+                            <Link href="/orders" className="flex items-center gap-2">
+                                <Package className="h-5 w-5" />
+                                <span className="text-sm font-medium">
+                                    Mihas Ordens
+                                </span>
+                            </Link>
+                        </Button>
+                    </SignedIn>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
                     {/* Cart Button */}
                     <Button
                         variant="ghost"
@@ -41,13 +52,21 @@ export function Header() {
                     {/* User */}
                     <SignedIn>
                         <UserButton
-                            afterSignOutUrl="/"
+                            afterSwtchSessionUrl="/"
                             appearance={{
                                 elements: {
                                     avatarBox: "h-9 w-9"
                                 }
                             }}
-                        />
+                        >
+                            <UserButton.MenuItems>
+                                <UserButton.Link 
+                                    label="Minhas Ordens"
+                                    labelIcon={<Package className="h-4 w-4" />}
+                                    href="/orders"
+                                />
+                            </UserButton.MenuItems>
+                        </UserButton>
                     </SignedIn>
                     <SignedOut>
                         <SignInButton>
