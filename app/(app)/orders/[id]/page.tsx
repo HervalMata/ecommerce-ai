@@ -1,5 +1,5 @@
-import { auth } "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import {auth} from "@clerk/nextjs/server";
+import {notFound, redirect} from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -12,8 +12,9 @@ import {
     Truck,
     XCircle,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { getOrderById } from "@/lib/actions/orders";
+import {Badge} from "@/components/ui/badge";
+import {getOrderById} from "@/lib/actions/orders";
+import React from "react";
 
 export const metadata = {
     title: "Detalhes da Ordem | Loja de Laços",
@@ -21,9 +22,9 @@ export const metadata = {
 };
 
 const statusConfig: Record<
-    string, 
+    string,
     { color: string; icon: React.ElementType; label: string }
-> - {
+> = {
     pending: {
         color: "bg-yellow-100 text-yellow-800",
         icon: Clock,
@@ -55,21 +56,21 @@ interface OrderPageProps {
     params: Promise<{ id: string }>;
 }
 
-export default async function OrderDetailPage({ params }: OrderPageProps) {
-    const { id } = await params;
-    const { userId } = await auth();
+export default async function OrderDetailPage({params}: OrderPageProps) {
+    const {id} = await params;
+    const {userId} = await auth();
 
     if (!userId) {
         redirect(`/sign-in?redirect_url=/orders/${id}`);
     }
 
-    const { success, order, error } = await getOrderById(id);
+    const {success, order, error} = await getOrderById(id);
 
     if (!success || !order) {
         notFound();
     }
 
-    const status = statusConfig(order.status ?? "pending") ?? statusConfig.pending;
+    const status = statusConfig[order.status ?? "pending"] ?? statusConfig.pending;
     const StatusIcon = status.icon;
 
     return (
@@ -80,7 +81,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                     href="/orders"
                     className="inline-flex items-center text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
                 >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    <ArrowLeft className="mr-2 h-4 w-4"/>
                     Voltar para minhas ordens
                 </Link>
                 <div>
@@ -91,13 +92,13 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                         <p>
                             Criada em{" "}
                             {order.createdAt
-                                ? new Date(order.createdAt).toLocalDateString("pt-BR", {
+                                ? new Date(order.createdAt).toLocaleDateString("pt-BR", {
                                     day: "numeric",
                                     month: "long",
                                     year: "numeric",
                                     hour: "2-digit",
                                     minute: "2-digit",
-                            })
+                                })
                                 : "Data Desconhecida"
                             }
                         </p>
@@ -105,10 +106,10 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                     <Badge
                         className={`${status.color} flex items-center gap-1.5`}
                     >
-                        <StatusIcon className="h-4 w-4" />
+                        <StatusIcon className="h-4 w-4"/>
                         {status.label}
                     </Badge>
-                </div
+                </div>
             </div>
 
             <div className="grid gap-8 lg:grid-cols-3">
@@ -121,12 +122,13 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                             </h2>
                         </div>
                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                            {order.items?.map((item) => (
+                            {order.items?.map((item: any, index: any) => (
                                 <div key={index} className="flex gap-4 px-6 py-4">
                                     {/* Image */}
-                                    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
+                                    <div
+                                        className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
                                         {item.product?.image?.asset?.url ? (
-                                            <Image 
+                                            <Image
                                                 src={item.product.image?.asset?.url}
                                                 alt={item.product.name ?? "Produto"}
                                                 fill
@@ -134,8 +136,9 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                                                 sizes="80px"
                                             />
                                         ) : (
-                                            <div className="flex h-full items-center justify-center text-xs text-zinc-400">
-                                                Nenhuma Imagem 
+                                            <div
+                                                className="flex h-full items-center justify-center text-xs text-zinc-400">
+                                                Nenhuma Imagem
                                             </div>
                                         )}
                                     </div>
@@ -144,7 +147,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                                     <div className="flex flex-1 flex-col justify-between">
                                         <div>
                                             <Link
-                                                href={`/productrs/${item.product?.slug}`}
+                                                href={`/products/${item.product?.slug}`}
                                                 className="font-medium text-zinc-900 hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300"
                                             >
                                                 {item.product?.name ?? "Produto Desconhecido"}
@@ -158,7 +161,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                                     {/* Price */}
                                     <div className="text-right">
                                         <p className="mt-1 text-zinc-900 dark:text-zinc-100">
-                                            R$ {({item.priceAtPurchase ?? 0) * (item.quantity ?? 1)).toLocaleString("pt-BR")}
+                                            R$ {((item.priceAtPurchase ?? 0) * (item.quantity ?? 1)).toLocaleString("pt-BR")}
                                         </p>
                                         {(item.quantity ?? 1) > 1 && (
                                             <p className="text-sm text-zinc-500">
@@ -178,7 +181,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
                         <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">
                             Resumo da Ordem
-                        <h2>
+                        </h2>
                         <div className="mt-4 space-y-3">
                             <div className="flex justify-between text-sm">
                                 <span className="text-zinc-500 dark:text-zinc-400">
@@ -203,9 +206,10 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
 
                     {/* Shipping Address */}
                     {order.address && (
-                        <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+                        <div
+                            className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
                             <div className="flex items-center gap-2">
-                                <MapPin className="h-5 w-5 text-zinc-400" />
+                                <MapPin className="h-5 w-5 text-zinc-400"/>
                                 <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">
                                     Endereço de Entrega
                                 </h2>
@@ -227,7 +231,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                     {/* Payment Info */}
                     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
                         <div className="flex items-center gap-2">
-                            <CreditCard className="h-5 w-5 text-zinc-400" />
+                            <CreditCard className="h-5 w-5 text-zinc-400"/>
                             <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">
                                 Pagamento
                             </h2>
@@ -246,15 +250,15 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                                 <span className="text-zinc-500 dark:text-zinc-400">
                                     Email
                                 </span>
-                                <span className="text-zinc-900 dark:text-zinc-100">
+                                    <span className="text-zinc-900 dark:text-zinc-100">
                                     {order.email}
                                 </span>
-                            </div>
+                                </div>
                             )}
                         </div>
                     </div>
                 </div>
-            </div>                    
+            </div>
         </div>
     )
 }

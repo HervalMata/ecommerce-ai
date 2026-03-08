@@ -1,15 +1,15 @@
 "use client";
 
 import { useCartStock } from "@/lib/hooks/useCartStock";
-import { 
-    useCartItems, 
-    useTotalItems, 
-    useTotalPrice 
+import {
+    useCartItems,
+    useTotalItems,
+    useTotalPrice
 } from "@/lib/store/cart-store-provider";
 import { ArrowLeft, ShoppingBag, AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/Link";
-import Image from "next/Image";
+import Link from "next/link";
+import Image from "next/image";
 import { CheckoutButton } from "@/components/app/CheckoutButton";
 
 export function CheckoutClient() {
@@ -70,8 +70,8 @@ export function CheckoutClient() {
 
                         {/* Stock Issues Warning */}
                         {hasStockIssues && !isLoading && (
-                            <div className="mx-6 nt-4 flex items-center gap-2 rounded-lg border 
-                                border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 
+                            <div className="mx-6 nt-4 flex items-center gap-2 rounded-lg border
+                                border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800
                                 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200">
                                 <AlertTriangle className="h-5 w-5 shirink-0" />
                                 <span>
@@ -109,7 +109,7 @@ export function CheckoutClient() {
                                         {/* Image */}
                                         <div className="relative h-20 w-20 shirink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
                                             {item.image ? (
-                                                <Image 
+                                                <Image
                                                     src={item.image}
                                                     alt={item.name}
                                                     fill

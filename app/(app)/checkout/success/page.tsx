@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { SuccessClient } from "./SuccessClient";
-import { getCheckoutSession } from "@/lib/actions/checkout";
+import SuccessClient from "@/app/(app)/checkout/success/SuccessClient";
+import {getCheckoutSession} from "@/lib/actions/checkout";
 
 export const metadata = {
     title: "Comfirmação de Ordem | Loja de Laços",
@@ -25,5 +25,6 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
         redirect("/");
     }
 
+    // @ts-ignore
     return <SuccessClient session={result.session} />
 }

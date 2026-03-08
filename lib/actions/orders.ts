@@ -6,14 +6,14 @@ import { auth } from "@clerk/nextjs/server";
 
 export async function getUserOrders() {
     try {
-        const { $userId } = await auth();
+        const { userId } = await auth();
 
         if (!userId) {
             return { success: false, error: "Não Autenticado", orders: [] };
         }
 
         const orders = await client.fetch(ORDERS_BY_USER_QUERY, {
-            clerkUserId: $userId,
+            clerkUserId: userId,
         });
 
         return { success: true, orders };
@@ -23,23 +23,23 @@ export async function getUserOrders() {
     }
 }
 
-export async function getOrderById() {
+export async function getOrderById(orderId: string) {
     try {
-        const { $userId } = await auth();
+        const { userId } = await auth();
 
         if (!userId) {
             return { success: false, error: "Não Autenticado", orders: [] };
         }
 
         const order = await client.fetch(ORDERS_BY_ID_QUERY, {
-            id: $orderId,
+            id: orderId,
         });
 
         if (!orderId) {
             return { success: false, error: "Ordem não encontrada." };
         }
 
-        if (!order.clerkUserId !== userId) {
+        if (order.clerkUserId !== userId) {
             return { success: false, error: "Ordem não encontrada." };
         }
 

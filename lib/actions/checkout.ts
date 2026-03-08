@@ -3,6 +3,7 @@
 import Stripe from "stripe";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { client } from "@/sanity/lib/client";
+import { PRODUCTS_BY_IDS_QUERY } from "@/sanity/lib/sanity/queries/products";
 
 if (!process.env.STRIPE_SECRET_KEY) {
     throw new Error("STRIPE_SECRET_KEY não está definida");
@@ -30,15 +31,15 @@ export async function createCheckoutSession(
     items: CartItem[]
 ): Promise<CheckoutResult | undefined> {
     try {
-        const { userId } = await auth();
+        const {userId} = await auth();
         const user = await currentUser();
 
         if (!userId || !user) {
-            return { success: false, error: "Por favor entre com suas credênciais para ir para o checkout"}
+            return {success: false, error: "Por favor entre com suas credênciais para ir para o checkout"}
         }
 
         if (!items || items.length === 0) {
-            return { success: false, error: "Seu carrinho está vazio."}
+            return {success: false, error: "Seu carrinho está vazio."}
         }
 
         const productIds = items.map((item) => item.productId);
@@ -51,19 +52,19 @@ export async function createCheckoutSession(
         const validateItems: {
             product: (typeof products)[number];
             quantity: number;
-        }[] = []:
+        }[] = [];
 
-        for (const item in items) {
-            
+        for (const item of items) {
+
             const product = products.find(
-                (p: { _id: string }) => p._id === item.productId;
+                (p: { _id: string }) => p._id === item.productId
             );
 
             if (!product) {
                 validationErrors.push(`Produto "${item.name}" não está mais disponivel.`);
                 continue;
             }
-            
+
             if ((product.stock ?? 0) === 0) {
                 validationErrors.push(`"${product.name}" está fora de estoque.`);
                 continue;
@@ -74,15 +75,15 @@ export async function createCheckoutSession(
                 continue;
             }
 
-            validateItems.push({ product, quantity: item.quantity });
+            validateItems.push({product, quantity: item.quantity});
         }
 
         if (validationErrors.length > 0) {
-            return { success: false, error: validationErrors.join(", ")};
+            return {success: false, error: validationErrors.join(", ")};
         }
 
         const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
-            validateItems.map(({ product, quantity }) => ({
+            validateItems.map(({product, quantity}) => ({
                 price_data: {
                     currency: "brl",
                     product_data: {
@@ -103,10 +104,10 @@ export async function createCheckoutSession(
             productIds: validateItems.map((i) => i.product._id).join(","),
             quantities: validateItems.map((i) => i.quantity).join(","),
         };
-        
+
         const session = await stripe.checkout.sessions.create({
             mode: "payment",
-            payment_method_type: ["card"],
+            payment_method_types: ["card"],
             line_items: lineItems,
             customer_email: user.emailAddresses[0]?.emailAddress,
             shipping_address_collection: {
@@ -117,13 +118,17 @@ export async function createCheckoutSession(
             cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout`,
         });
 
-        return { success: true, url: session.url ?? undefined };
+        return {success: true, url: session.url ?? undefined};
     } catch (error) {
-        success: false,
-        error: "Algo aconteceu errado. Por favor tente novamente",
+        console.error("Erro no checkout: ", error);
+        return {
+            success: false,
+            error: "Algo aconteceu errado. Por favor tente novamente",
+        }
     }
+}
 
-    export async function getCheckoutSession(session_id:string) {
+export async function getCheckoutSession(sessionId: string) {
         try {
             const { userId } = await auth();
 
@@ -160,4 +165,3 @@ export async function createCheckoutSession(
             return { success: false, error: "Não foi possivel recuperar os detalhes da transação."};
         }
     }
-}

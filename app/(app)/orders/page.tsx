@@ -1,4 +1,4 @@
-import { auth } "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Package, ArrowRight, ShoppingBag } from "lucide-react";
@@ -11,7 +11,7 @@ export const metadata = {
     description: "Veja suas ordens",
 };
 
-const statusColors: Record<string, string> - {
+const statusColors: Record<string, string> = {
     pending: "bg-yellow-100 text-yellow-800",
     paid: "bg-green-100 text-green-800",
     shipped: "bg-blue-100 text-blue-800",
@@ -32,7 +32,7 @@ export default async function OrdersPage() {
         return (
             <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="text-center">
-                    <ShoppingBag className="mx-auto h-16 w-16 text-zinc-300 dark:text-zinc-600" />
+                    <Package className="mx-auto h-16 w-16 text-zinc-300 dark:text-zinc-600" />
                     <h1 className="mt-6 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
                         Nenhuma Ordem ainda.
                     </h1>
@@ -64,11 +64,11 @@ export default async function OrdersPage() {
             </div>
 
             <div className="space-y-4">
-                {orders.map((order) => (
+                {orders.map((order: any) => (
                     <Link
                         key={order._id}
                         href={`/orders/&{order._id}`}
-                        className="block rounded-lg border border-zinc-200 bg-white p-6 
+                        className="block rounded-lg border border-zinc-200 bg-white p-6
                             transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950"
                     >
                         <div className="flex items-start justify-between">
@@ -82,7 +82,7 @@ export default async function OrdersPage() {
                                     </p>
                                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
                                         {order.createdAt
-                                            ? new Date(order.createdAt).toLocalDateString("pt-BR", {
+                                            ? new Date(order.createdAt).toLocaleDateString("pt-BR", {
                                                 day: "numeric",
                                                 month: "long",
                                                 year: "numeric",
