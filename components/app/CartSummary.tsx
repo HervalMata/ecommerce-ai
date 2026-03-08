@@ -31,7 +31,7 @@ export function CartSummary({ hasStockIssues }: CartSummaryProps) {
                     </Button>
                 ) : (
                     <Button asChild className="w-full">
-                        <Link href="/checkout" onClick=() =>closeCart()>Checkout</Link>
+                        <Link href="/checkout" onClick={() =>closeCart()}>Checkout</Link>
                     </Button>
                 )}
             </div>

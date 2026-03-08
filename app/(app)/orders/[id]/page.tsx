@@ -15,41 +15,13 @@ import {
 import {Badge} from "@/components/ui/badge";
 import {getOrderById} from "@/lib/actions/orders";
 import React from "react";
+import { sanityFetch } from "@/sanity/lib/live";
+import { ORDERS_BY_ID_QUERY } from "@/sanity/lib/sanity/queries/orders";
+import { getOrderStatus } from "@/lib/constants/orderStatus";
 
 export const metadata = {
     title: "Detalhes da Ordem | Loja de Laços",
     description: "Veja os detalhes da sua ordem",
-};
-
-const statusConfig: Record<
-    string,
-    { color: string; icon: React.ElementType; label: string }
-> = {
-    pending: {
-        color: "bg-yellow-100 text-yellow-800",
-        icon: Clock,
-        label: "Pendente"
-    },
-    paid: {
-        color: "bg-green-100 text-green-800",
-        icon: CheckCircle,
-        label: "Paga"
-    },
-    shipped: {
-        color: "bg-blue-100 text-blue-800",
-        icon: Truck,
-        label: "Enviada"
-    },
-    delivered: {
-        color: "bg-zinc-100 text-zinc-800",
-        icon: Package,
-        label: "Entregue"
-    },
-    cancelled: {
-        color: "bg-red-100 text-red-800",
-        icon: XCircle,
-        label: "Cancelada"
-    },
 };
 
 interface OrderPageProps {
@@ -60,17 +32,16 @@ export default async function OrderDetailPage({params}: OrderPageProps) {
     const {id} = await params;
     const {userId} = await auth();
 
-    if (!userId) {
-        redirect(`/sign-in?redirect_url=/orders/${id}`);
-    }
+    const { data: order } = await sanityFetch({
+        query: ORDERS_BY_ID_QUERY,
+        params: { id },
+    })
 
-    const {success, order, error} = await getOrderById(id);
-
-    if (!success || !order) {
+    if (!order || order.clerkUserId !== userId) {
         notFound();
     }
 
-    const status = statusConfig[order.status ?? "pending"] ?? statusConfig.pending;
+    const status = getOrderStatus(order.status);
     const StatusIcon = status.icon;
 
     return (
@@ -112,7 +83,7 @@ export default async function OrderDetailPage({params}: OrderPageProps) {
                 </div>
             </div>
 
-            <div className="grid gap-8 lg:grid-cols-3">
+            <div className="grid gap-8 lg:grid-cols-5">
                 {/* Order Items */}
                 <div className="lg:col-span-2">
                     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
@@ -122,8 +93,8 @@ export default async function OrderDetailPage({params}: OrderPageProps) {
                             </h2>
                         </div>
                         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                            {order.items?.map((item: any, index: any) => (
-                                <div key={index} className="flex gap-4 px-6 py-4">
+                            {order.items?.map((item: any) => (
+                                <div key={item._key} className="flex gap-4 px-6 py-4">
                                     {/* Image */}
                                     <div
                                         className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
@@ -176,7 +147,7 @@ export default async function OrderDetailPage({params}: OrderPageProps) {
                 </div>
 
                 {/* Order Summary & Details */}
-                <div className="space-y-6">
+                <div className="space-y-6 lg:col-span-2">
                     {/* Summary */}
                     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
                         <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">
@@ -236,21 +207,21 @@ export default async function OrderDetailPage({params}: OrderPageProps) {
                                 Pagamento
                             </h2>
                         </div>
-                        <div className="mt-4 space-y-2 text-sm">
-                            <div className="flex justify-between">
-                                <span className="text-zinc-500 dark:text-zinc-400">
+                        <div className="mt-4 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-light tracking-wide">
                                     Status
                                 </span>
-                                <span className="font-medium capitalize text-green-600">
+                                <span className="text-sm font-medium capitalize text-green-600">
                                     {order.status}
                                 </span>
                             </div>
                             {order.email && (
-                                <div>
-                                <span className="text-zinc-500 dark:text-zinc-400">
+                                <div className="flex items-center justify-between">
+                                <span className="text-xs font-light tracking-wide">
                                     Email
                                 </span>
-                                    <span className="text-zinc-900 dark:text-zinc-100">
+                                    <span className="min-w-0 truncate text-sm text-zinc-900 dark:text-zinc-100">
                                     {order.email}
                                 </span>
                                 </div>

@@ -13,7 +13,7 @@ function Layout({ children }: { children: ReactNode }) {
             <Header />
             <main>{children}</main>
             <CartSheet />
-            <Toaster />
+            <Toaster position="bottom-left" />
             <SanityLive />
         </CartStoreProvider>
     </ClerkProvider>
