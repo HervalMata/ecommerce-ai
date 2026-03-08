@@ -58,7 +58,7 @@ export const customerType = defineType({
                     : (email ?? "")
             };
         },
-    }
+    },
     orderings: [
         {
             title: "Mais Novos",
