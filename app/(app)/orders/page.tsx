@@ -74,7 +74,7 @@ export default async function OrdersPage() {
                                 <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
                                     {images.length > 0 ? (
                                         <div className="relative h-full w-full">
-                                            {images.map((imageUrl, idx) => (
+                                            {images.map((imageUrl: string, idx: any) => (
                                                 <div
                                                     key={`${order._id}-img-${idx}`}
                                                     className="absolute overflow-hidden rounded-lg border-2 border-white bg-zinc-100 shadow-sm dark:border-zinc-900 dark:bg-zinc-800"
