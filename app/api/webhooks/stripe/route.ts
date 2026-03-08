@@ -17,7 +17,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: "2026-02-25.clover",
 });
 
-const webhookSecret = ProcessingInstruction.env.STRIPE_WEBHOOK_SECRET;
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         return NextResponse.json(
             { error: "Missing stripe-signature header"},
             { status: 400 },
-        ),
+        );
     }
 
     let event: Stripe.Event;
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
         const message = error instanceof Error ? error.message : "Erro desconhecido";
         console.log("Falha ao verificar a assinatura do webhook", message);
         return NextResponse.json(
-            { error: `Webhook eror: ${}message`},
+            { error: `Webhook eror: ${message}`},
             { status: 400 },
         )
     }
@@ -47,10 +47,10 @@ export async function POST(req: Request) {
     switch (event.type) {
         case "checkout.session.completed": {
             const session = event.data.object as Stripe.Checkout.Session;
-            await handleCeckoutCompleted(session);
+            await handleCheckoutCompleted(session);
             break;
         }
-    
+
         default:
             console.log(`Unhandled event type: ${event.type}`);
     }
@@ -72,7 +72,7 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
         }
 
         const {
-            clerkUserId, 
+            clerkUserId,
             userEmail,
             productIds: productIdsString,
             quantities: quantitiesString,
@@ -86,12 +86,12 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
         const productIds = productIdsString.split(",");
         const quantities = quantitiesString.split(",").map(Number);
 
-        const lineItems = await stripe.checkout.session.listLineItems(session.id);
+        const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
 
         const orderItems = productIds.map((productId, index) => ({
             _key: `item-${index}`,
             product: {
-                _type: "reference" as count,
+                _type: "reference" as const,
                 _ref: productId,
             },
             quantity: quantities[index],
@@ -100,7 +100,7 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
                 : 0,
         }));
 
-        const orderNumber = `ORD-${Date.now().toString(36).ToUpperCase()}-
+        const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}-
                     &{Math.random().toString(36).subString(2, 6).toUpperCase()}`;
 
         const shippingAddress = session.customer_details?.address;
@@ -110,26 +110,26 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
                 line1: shippingAddress.line1 ?? "",
                 line2: shippingAddress.line2 ?? "",
                 city: shippingAddress.city ?? "",
-                postcode: shippingAddress.post_code ?? "",
+                postcode: shippingAddress.postal_code ?? "",
                 country: shippingAddress.country ?? "",
             }
             : undefined;
-            
+
         const order = await client.create({
             _type: "order",
             orderNumber,
             clerkUserId,
             email: userEmail ?? session.customer_details?.email ?? "",
-            total:(sesssion.amount_total ?? 0) / 100,
+            total:(session.amount_total ?? 0) / 100,
             status: "paid",
             stripePaymentId,
             address,
-            createdAt: new Date().toIsoString(),
+            createdAt: new Date().toISOString(),
         });
-        
+
         await productIds
             .reduce(
-                (tx, productId, i) => 
+                (tx, productId, i) =>
                     tx.patch(productId, (p) => p.dec({ stock: quantities[i] })),
                 client.transaction()
             )
@@ -137,6 +137,5 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
     } catch (error) {
         console.error("Falha ao completar o processamento do checkout", error);
         throw error;
-        )
     }
 }
