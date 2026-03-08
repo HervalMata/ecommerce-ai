@@ -5,9 +5,11 @@ import {useCartActions} from "@/lib/store/cart-store-provider";
 import Image from "next/image";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {AlertCircle, Minus, Plus, Trash2} from "lucide-react";
+import {Trash2} from "lucide-react";
 import type { StockInfo } from "@/lib/hooks/useCartStock";
 import { cn } from "@/lib/utils";
+import { StockBadge } from "./StockBadge";
+import { AddToCardButton } from "./AddToCartButton";
 
 interface CartItemProps {
     item: CartItemType;
@@ -17,19 +19,12 @@ interface CartItemProps {
 export function CartItem(
     { item, stockInfo }: CartItemProps
 ) {
-    const { updateQuantity, removeItem } = useCartActions();
+    const { removeItem } = useCartActions();
 
     const isOutOfStock = stockInfo?.isOutOfStock ?? false;
     const exceedsStock = stockInfo?.exceedStock ?? false;
     const currentStock = stockInfo?.currentStock ?? Infinity;
     const hasIssue = isOutOfStock || exceedsStock;
-
-    const atMaxStock =
-        !isOutOfStock && !exceedsStock && item.quantity >= currentStock;
-
-    const remainingAfterPurchase = currentStock - item.quantity;
-    const isLowStock = 
-        !isOutOfStock && !exceedsStock && Number.isFinite(currentStock) && currentStock <= 3 && remainingAfterPurchase >= 0;    
 
     return (
         <div className={cn(
@@ -83,73 +78,20 @@ export function CartItem(
                     R$ {item.price.toLocaleString("pt-BR")}
                 </p>
 
-                {/* Stock Messages */}
-                {isOutOfStock && (
-                    <div className="mt-2 flex items-center gap-1.5 text-sm font-medium text-amber-600 dark:text-amber-400">
-                        <AlertCircle className="h-4 w-4" />
-                        Sem Estoque - Por favor remova este item
-                    </div>
-                )}
-
-                {exceedsStock && !isOutOfStock && (
-                    <div className="mt-2 flex items-center gap-1.5 text-sm font-medium text-amber-600 dark:text-amber-400">
-                        <AlertCircle className="h-4 w-4" />
-                        {currentStock === 1
-                            ? "Somente 1 restando - Por favor reduza a quantidade para 1"
-                            : `Somente ${currentStock} em estoque - Por favor reduza a quantidade`
-                        }    
-                    </div>
-                )}
-
-                {atMaxStock && (
-                    <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
-                        <AlertCircle className="h-4 w-4" />
-                        {currentStock === 1
-                            ? "Você terá o último"
-                            : `Você terá o último ${currentStock} em estoque!`
-                        }    
-                    </div>
-                )}
-
-                {isLowStock && !atMaxStock && (
-                    <div className="mt-2 text-xs text-amber-600 dark:text-amber-400">
-                        <AlertCircle className="h-4 w-4" />
-                        {currentStock === 1
-                            ? "Somente 1 restando - Por favor reduza a quantidade para 1"
-                            : `Somente ${currentStock} em estoque - Por favor reduza a quantidade`
-                        }    
-                    </div>
-                )}
-
                 {/* Quantity Controls */}
                 <div className="mt-2 flex items-center gap-2">
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                        disabled={isOutOfStock}
-                    >
-                        <Minus className="h-3 w-3" />
-                        <span className="sr-only">Diminuir Quantidade</span>
-                    </Button>
-                    <span 
-                        className={cn(
-                            "w-8 text-center text-sm",
-                            exceedsStock && "font-medium text-amber-600 dark:text-amber-400"
-                    )}>
-                        {item.quantity}
-                    </span>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                        disabled={isOutOfStock || Number.isFinite(currentStock) && item.quantity >= currentStock}
-                    >
-                        <Plus className="h-3 w-3" />
-                        <span className="sr-only">Aumentar Quantidade</span>
-                    </Button>
+                    <StockBadge productId={item.productId} stock={currentStock} />
+                    {!isOutOfStock && (
+                        <div>
+                            <AddToCardButton 
+                                productId={item.productId}
+                                name={item.name}
+                                price={item.price}
+                                image={item.image}
+                                stock={currentStock}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

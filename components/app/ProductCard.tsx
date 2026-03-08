@@ -1,14 +1,14 @@
 "use client"
 
 import type { FILTER_PRODUCTS_BY_NAME_QUERYResult} from "@/sanity.types";
-import {useCartActions, useCartItems} from "@/lib/store/cart-store-provider";
 import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
 import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
 import {useState} from "react";
 import {cn} from "@/lib/utils";
+import { StockBadge } from "./StockBadge";
+import { AddToCardButton } from "./AddToCartButton";
 
 type Product = FILTER_PRODUCTS_BY_NAME_QUERYResult[number];
 
@@ -19,8 +19,6 @@ interface ProductCardProps {
 export function ProductCard(
     { product }: ProductCardProps
 ) {
-    const { addItem, openCart } = useCartActions();
-    const cartItems = useCartItems();
     const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null);
     const images = product.images ?? [];
     const mainImageUrl = images[0]?.asset?.url;
@@ -31,25 +29,8 @@ export function ProductCard(
 
     const hasMultipleImages = images.length > 1;
     const stock = product.stock ?? 0;
-    const cartItem = cartItems.find((item) => item.productId === product._id);
-    const quantityInCart = cartItem?.quantity ?? 0;
-    const availableToAdd = stock - quantityInCart;
 
     const isOutOfStock = stock <= 0;
-    const isMaxInCart = availableToAdd <= 0 && !isOutOfStock;
-
-    const handleAddToCart = () => {
-        if (isOutOfStock || isMaxInCart) return;
-
-        addItem({
-            productId: product._id,
-            name: product.name ?? "Produto desconhecido",
-            price: product.price ?? 0,
-            image: mainImageUrl ?? undefined,
-        });
-
-        openCart();
-    };
 
     return (
         <Card className="group overflow-hidden border-zinc-200 bg-white transition-all hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
@@ -126,19 +107,14 @@ export function ProductCard(
             </CardContent>
 
             <CardFooter className="flex flex-col gap-2 p-4 pt-0">
-                {quantityInCart > 0 && (
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        {quantityInCart} no Carrinho de compras
-                    </p>
-                )}
-                <Button
-                    onClick={handleAddToCart}
-                    disabled={isOutOfStock || isMaxInCart}
-                    className="w-full"
-                    variant={isOutOfStock || isMaxInCart ? "secondary" : "default"}
-                >
-                    {isOutOfStock ? "Fora de Estoque" : isMaxInCart ? "Máximo de produtos no carrinho" : "Adicionar para o Carrinho"}
-                </Button>
+                <StockBadge productId={product._id} stock={stock} className="mx-auto" />
+                <AddToCardButton 
+                    productId={product._id}
+                    name={product.name ?? "Produto Desconhecido"}
+                    price={product.price ?? 0}
+                    image={mainImageUrl ?? undefined}
+                    stock={stock}
+                 />
             </CardFooter>
         </Card>
     );

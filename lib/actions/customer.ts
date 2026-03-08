@@ -59,7 +59,7 @@ export async function getOrCreateStripeustomer(
         };    
     }
 
-    const newSanityCustomer = await.writeClient.create({
+    const newSanityCustomer = await writeClient.create({
         _type: "customer",
         email,
         name,

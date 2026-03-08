@@ -4,7 +4,7 @@ import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {ShoppingBag, User} from "lucide-react";
 import {useCartActions, useTotalItems} from "@/lib/store/cart-store-provider";
-import {SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
+import {SignedIn, SignedOut, UserButton, SignInButton} from "@clerk/nextjs";
 
 export function Header() {
     const { openCart } = useCartActions();
@@ -50,16 +50,15 @@ export function Header() {
                         />
                     </SignedIn>
                     <SignedOut>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            asChild
-                        >
-                            <Link href="/sign-in">
+                        <SignInButton>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                            >
                                 <User className="h-5 w-5" />
                                 <span className="sr-only">Entrar</span>
-                            </Link>
-                        </Button>
+                            </Button>
+                        </SignInButton>
                     </SignedOut>
                 </div>
             </div>

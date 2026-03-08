@@ -1,6 +1,6 @@
 "use client"
 
-import {useTotalItems, useTotalPrice} from "@/lib/store/cart-store-provider";
+import {useCartActions, useTotalItems, useTotalPrice} from "@/lib/store/cart-store-provider";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
@@ -11,6 +11,7 @@ interface CartSummaryProps {
 export function CartSummary({ hasStockIssues }: CartSummaryProps) {
     const totalPrice = useTotalPrice();
     const totalItems = useTotalItems();
+    const { closeCart } = useCartActions();
 
     if (totalItems === 0) return null;
 
@@ -30,7 +31,7 @@ export function CartSummary({ hasStockIssues }: CartSummaryProps) {
                     </Button>
                 ) : (
                     <Button asChild className="w-full">
-                        <Link href="/checkout">Checkout</Link>
+                        <Link href="/checkout" onClick=() =>closeCart()>Checkout</Link>
                     </Button>
                 )}
             </div>
