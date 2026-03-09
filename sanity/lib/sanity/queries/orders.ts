@@ -1,4 +1,4 @@
-import {defineQuery} from "groq";
+import {defineQuery} from "next-sanity";
 
 export const ORDERS_BY_USER_QUERY = defineQuery(`*[
     _type == "order"

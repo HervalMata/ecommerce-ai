@@ -1,25 +1,20 @@
 import {auth} from "@clerk/nextjs/server";
-import {notFound, redirect} from "next/navigation";
+import {notFound} from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
     ArrowLeft,
-    Package,
     CreditCard,
     MapPin,
-    CheckCircle,
-    Clock,
-    Truck,
-    XCircle,
 } from "lucide-react";
 import {Badge} from "@/components/ui/badge";
-import {getOrderById} from "@/lib/actions/orders";
 import React from "react";
 import { sanityFetch } from "@/sanity/lib/live";
 import { ORDERS_BY_ID_QUERY } from "@/sanity/lib/sanity/queries/orders";
 import { getOrderStatus } from "@/lib/constants/orderStatus";
+import {Metadata} from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Detalhes da Ordem | Loja de Laços",
     description: "Veja os detalhes da sua ordem",
 };
