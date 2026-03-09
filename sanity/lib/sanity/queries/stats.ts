@@ -1,4 +1,4 @@
-import {defineQuery} from "groq";
+import {defineQuery} from "next-sanity";
 
 export const PRODUCT_COUNT_QUERY = defineQuery(`count(*[_type == "product"])`);
 

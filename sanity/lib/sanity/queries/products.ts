@@ -1,4 +1,4 @@
-import {defineQuery} from "groq";
+import {defineQuery} from "next-sanity";
 
 const PRODUCT_LIST_PROJECTION = `{
     _id,
@@ -288,7 +288,7 @@ export const FILTER_PRODUCTS_BY_RELEVANCE_QUERY = defineQuery(`*[
 
 export const PRODUCTS_BY_IDS_QUERY = defineQuery(`*[
     _type == "product"
-    && _id in &ids
+    && _id in $ids
 ] {
     _id,
     name,

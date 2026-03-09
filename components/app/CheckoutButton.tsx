@@ -12,7 +12,7 @@ interface CheckoutButtonProps {
     disabled?: boolean;
 }
 
-export async function CheckoutButton({ disabled }:CheckoutButtonProps) {
+export function CheckoutButton({ disabled }:CheckoutButtonProps) {
     const router = useRouter();
     const items = useCartItems();
     const [isPending, startTransition] = useTransition();

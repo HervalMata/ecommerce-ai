@@ -1,4 +1,4 @@
-import {defineQuery} from "groq";
+import {defineQuery} from "next-sanity";
 
 export const ALL_CATEGORIES_QUERY = defineQuery(`*[
     _type == "category"
