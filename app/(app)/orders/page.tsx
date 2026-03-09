@@ -7,8 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { sanityFetch } from "@/sanity/lib/live";
 import { ORDERS_BY_USER_QUERY } from "@/sanity/lib/sanity/queries/orders";
 import { getOrderStatus } from "@/lib/constants/orderStatus";
+import {Metadata} from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Minhas Ordens | Loja de Laços",
     description: "Veja suas ordens",
 };
@@ -87,7 +88,7 @@ export default async function OrdersPage() {
                                                         zIndex: images.length - idx,
                                                     }}
                                                 >
-                                                    <Image 
+                                                    <Image
                                                         src={imageUrl as string}
                                                         alt=""
                                                         fill
@@ -97,7 +98,7 @@ export default async function OrdersPage() {
                                                 </div>
                                             ))}
                                             {extraCount > 0 && (
-                                                <div 
+                                                <div
                                                     className="absolute flex items-center justify-center rounded-lg border-2 border-white bg-zinc-100 text-xs font-medium text-zinc-600 dark:border-zinc-900 dark:bg-zinc-700 dark:text-zinc-300"
                                                     style={{
                                                         width: "56px",

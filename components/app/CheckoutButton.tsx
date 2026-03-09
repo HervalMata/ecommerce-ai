@@ -27,9 +27,9 @@ export async function CheckoutButton({ disabled }:CheckoutButtonProps) {
             if (result?.success && result?.url && result !== undefined) {
                 router.push(result.url);
             } else {
-                setError(result.error ?? "Falha no checkout");
+                setError(result?.error ?? "Falha no checkout");
                 toast.error("Error no checkout", {
-                    description: result.error ?? "Algo deu errado",
+                    description: result?.error ?? "Algo deu errado",
                 });
             }
         });

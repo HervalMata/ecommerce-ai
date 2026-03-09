@@ -22,7 +22,7 @@ export function Header() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2">
-                    {/* MyOrders - Only when signed in */}                 
+                    {/* MyOrders - Only when signed in */}
                     <SignedIn>
                         <Button asChild>
                             <Link href="/orders" className="flex items-center gap-2">
@@ -32,7 +32,7 @@ export function Header() {
                                 </span>
                             </Link>
                         </Button>
-                    </SignedIn>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                    </SignedIn>
                     {/* Cart Button */}
                     <Button
                         variant="ghost"
@@ -52,7 +52,7 @@ export function Header() {
                     {/* User */}
                     <SignedIn>
                         <UserButton
-                            afterSwtchSessionUrl="/"
+                            afterSwitchSessionUrl="/"
                             appearance={{
                                 elements: {
                                     avatarBox: "h-9 w-9"
@@ -60,7 +60,7 @@ export function Header() {
                             }}
                         >
                             <UserButton.MenuItems>
-                                <UserButton.Link 
+                                <UserButton.Link
                                     label="Minhas Ordens"
                                     labelIcon={<Package className="h-4 w-4" />}
                                     href="/orders"

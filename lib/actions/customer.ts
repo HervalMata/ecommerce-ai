@@ -12,11 +12,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: "2026-02-25.clover",
 });
 
-export async function getOrCreateStripeustomer(
+export async function getOrCreateStripeCustomer(
     email: string,
     name: string,
     clerkUserId: string
-): Promise<{ stripeCustomerId: string; sanityCustomerId: string } | undefined> {
+): Promise<{ stripeCustomerId: string; sanityCustomerId: string }> {
     const existingCustomer = await client.fetch(CUSTOMER_BY_EMAIL_QUERY, {
         email,
     });
@@ -56,7 +56,7 @@ export async function getOrCreateStripeustomer(
         return {
             stripeCustomerId,
             sanityCustomerId: existingCustomer._id,
-        };    
+        };
     }
 
     const newSanityCustomer = await writeClient.create({

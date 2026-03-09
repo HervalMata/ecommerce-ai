@@ -4,7 +4,7 @@ import Stripe from "stripe";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { client } from "@/sanity/lib/client";
 import { PRODUCTS_BY_IDS_QUERY } from "@/sanity/lib/sanity/queries/products";
-import { getOrCreateStripeustomer } from "./customer";
+import { getOrCreateStripeCustomer } from "./customer";
 
 if (!process.env.STRIPE_SECRET_KEY) {
     throw new Error("STRIPE_SECRET_KEY não está definida");
@@ -100,9 +100,9 @@ export async function createCheckoutSession(
             }));
 
         const userEmail = user.emailAddresses[0]?.emailAddress ?? "";
-        const userName = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || userEmail;    
+        const userName = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || userEmail;
 
-        const { stripeCustomerId, sanityCustomerId } = await getOrCreateStripeustomer(userEmail, userName, userId);
+        const { stripeCustomerId, sanityCustomerId } = await getOrCreateStripeCustomer(userEmail, userName, userId);
 
         const metadata = {
             clerkUserId: userId,
@@ -112,7 +112,7 @@ export async function createCheckoutSession(
             quantities: validateItems.map((i) => i.quantity).join(","),
         };
 
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ||
             (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) || "http://localhost:3000";
 
         const session = await stripe.checkout.sessions.create({

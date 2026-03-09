@@ -40,7 +40,7 @@ export const customerType = defineType({
             name: "createdAt",
             type: "datetime",
             group: "details",
-            readonly: true,
+            readOnly: true,
             initialValue: () => new Date().toISOString(),
         }),
     ],

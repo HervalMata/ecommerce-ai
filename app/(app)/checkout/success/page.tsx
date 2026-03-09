@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 import SuccessClient from "@/app/(app)/checkout/success/SuccessClient";
 import {getCheckoutSession} from "@/lib/actions/checkout";
+import {Metadata} from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Comfirmação de Ordem | Loja de Laços",
     description: "sua ordem da sua compra foi processada com sucesso",
 };
