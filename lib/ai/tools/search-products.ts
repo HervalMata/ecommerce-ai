@@ -9,7 +9,7 @@ const productSearchSchema = z.object({
     query: z.string()
         .optional()
         .default("")
-        ,describe("Procurar termos para encontrar produtos por nome, descrição ou categoria (e.x. 'laço, tiara"),
+        ,describe("Procurar termos para encontrar produtos por nome, descrição ou categoria (e.x. 'laço', 'tiara')"),
     category: z.string()
         .optional()
         .default("")

@@ -1,0 +1,42 @@
+import { Sparkles } from "lucide-react";
+
+interface WelcomeScreenProps {
+    onSuggestioClick: (message: { text: string }) => void;
+}
+
+const suggestions = [
+    "Mostre-me seus laços",
+    "Lindas tiaras por menos de R$ 25,00",
+    "Quais Viseiras você tem?"
+]
+
+export function WelcomeScreen({ onSuggestioClick }: WelcomeScreenProps) {
+    return (
+        <div classname="flex h-full flex-col items-center justify-center text-center px-4">
+            <div classname="rounded-full bg-amber-100 p-4 dark:bg-amber-900/30">
+                <Sparkles classname="h-8 w-8 text-amber-500" />
+            </div>
+            <h3 classname="mt-4 text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                Como eu posso te ajudar hoje?
+            </h3>
+            <p classname="mt-2 text-sm text-zinc-500 dark:text-zinc-400 max-w-xs">
+                Eu posso ajudar você a encontrar laçosn por material, cores ou preços. Me pergunte!
+            </p>
+            <div classname="mt-6 flex flex-wrap justify-center gap-2">
+                {suggestions.map((suggestion) => (
+                    <button
+                        key={suggestion}
+                        type="button"
+                        onClick={() => onSuggestioClick({ text: suggestion })}
+                        classname="rounded-full border border-zinc-200 bg-white 
+                            px-3 py-1.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-50 
+                            dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 
+                            dark:hover:bg-zinc-700"
+                    >
+                        {suggestion}
+                    </button>
+                ))}
+            </div>
+        </div>
+    )
+}
