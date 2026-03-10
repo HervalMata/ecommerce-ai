@@ -9,31 +9,31 @@ const productSearchSchema = z.object({
     query: z.string()
         .optional()
         .default("")
-        ,describe("Procurar termos para encontrar produtos por nome, descrição ou categoria (e.x. 'laço', 'tiara')"),
+        .describe("Procurar termos para encontrar produtos por nome, descrição ou categoria (e.x. 'laço', 'tiara')"),
     category: z.string()
         .optional()
         .default("")
-        ,describe("Filtrar produtos por categoria(e.x. 'laço', 'tiara')"),
+        .describe("Filtrar produtos por categoria(e.x. 'laço', 'tiara')"),
     material: z
         .enum(["", "Lonita", "Gorgurão", "Seda"])
         .optional()
         .default("")
-        ,describe("Filtrar produtos por material"),
+        .describe("Filtrar produtos por material"),
     color: z
         .enum(["", "Rosa", "Azul", "Amarelo", "Cinza", "Natural"])
         .optional()
         .default("")
-        ,describe("Filtrar produtos pelas cores"),
+        .describe("Filtrar produtos pelas cores"),
     minPrice: z
         .number()
         .optional()
         .default(0)
-        ,describe("Preço minino em Reais (e.x., 100)"),
+        .describe("Preço minino em Reais (e.x., 100)"),
     maxPrice: z
         .number()
         .optional()
         .default(0)
-        ,describe("Preço maximo em Reais (e.x., 500). Use 0 para todos")                        
+        .describe("Preço maximo em Reais (e.x., 500). Use 0 para todos"),
 });
 
 export const searchProductsTool = tool({
@@ -72,6 +72,7 @@ export const searchProductsTool = tool({
                 };
             }
 
+            // @ts-ignore
             const formattedProducts: SearchProduct[] = (
                 products as AI_SEARCH_PRODUCTS_QUERYResult
             ).map((product) => {
@@ -109,8 +110,8 @@ export const searchProductsTool = tool({
                     featured: product.featured ?? null,
                     assemblyRequired: product.assemblyRequired ?? null,
                     imageUrl: product.image?.asset?.url ?? null,
-                    productUrl: product.slug ? `/products/${product.slug}` : null,                
-                };                
+                    productUrl: product.slug ? `/products/${product.slug}` : null,
+                };
             });
 
             return {
@@ -133,5 +134,5 @@ export const searchProductsTool = tool({
                 },
             };
         }
-    }      
+    }
 });

@@ -2,7 +2,7 @@ import { SearchProductResult } from "@/lib/ai/types";
 import { ToolCallPart } from "./types";
 import { getToolDisplayName } from "./utils";
 import { ProductCardWidget } from "./ProductCardWidget";
-import { Search, CheckCircle, Loader2 } from "lucide-react"; 
+import { Search, CheckCircle, Loader2 } from "lucide-react";
 
 interface ToolCallUIProps {
     toolPart: ToolCallPart;
@@ -13,18 +13,18 @@ export function ToolCallUI({ toolPart, closeChat }: ToolCallUIProps) {
     const toolName = toolPart.toolName || toolPart.type.replace("tool-", "");
     const displayName = getToolDisplayName(toolName);
 
-    const isComplete = 
+    const isComplete =
         toolPart.state === "result" ||
         toolPart.result !== undefined ||
         toolPart.output !== undefined;
 
     const searchQuery =
-        toolName === "searchProducts" && toolPart.args?.query 
+        toolName === "searchProducts" && toolPart.args?.query
             ? String(toolPart.args.query)
             : undefined;
-            
+
     const result = (toolPart.result || toolPart.output) as SearchProductResult;
-    
+
     const hasProduct = result?.found && result.products && result.products.length > 0;
 
     return (
@@ -74,12 +74,13 @@ export function ToolCallUI({ toolPart, closeChat }: ToolCallUIProps) {
                     </p>
                     <div className="space-y-2">
                         {result.products.map((product) => (
-                            <ProductCardWidget 
+                            <ProductCardWidget
                                 key={product.id}
                                 product={product}
                                 onClose={closeChat}
                             />
                         ))}
+                    </div>
                 </div>
             )}
         </div>

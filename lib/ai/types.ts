@@ -10,7 +10,7 @@ export interface SearchProduct {
     material: string | null;
     color: string | null;
     dimensions: string | null;
-    stock: number;
+    stockCount: number;
     stockStatus: "in_stock" | "low_stock" | "out_of_stock" | "unknown";
     stockMessage: string;
     featured: boolean;
