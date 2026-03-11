@@ -7,10 +7,12 @@ import { useChat } from "@ai-sdk/react";
 import { Button } from "../ui/button";
 import { getMessageText, getToolParts, MessageBubble, ToolCallUI, WelcomeScreen } from "./chat";
 import { Input } from "../ui/input";
+import { useAuth } from "@clerk/nextjs";
 
 export function ChatSheet() {
     const isOpen = useIsChatOpen();
     const { closeChat } = useChatActions();
+    const { isSignedIn } = useAuth();
     const [input, setInput] = useState("");
     const messageEndRef = useRef<HTMLDivElement>(null);
 
@@ -60,7 +62,7 @@ export function ChatSheet() {
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4">
                     {messages.length === 0 ? (
-                        <WelcomeScreen onSuggestionClick={sendMessage} />
+                        <WelcomeScreen onSuggestionClick={sendMessage} isSignedIn={isSignedIn ?? false} />
                     ) : (
                         <div className="space-y-4">
                             {messages.map((message) => {

@@ -1,9 +1,12 @@
-import { gateway, ToolLoopAgent } from "ai";
+import { gateway, type Tool, ToolLoopAgent } from "ai";
 import { searchProductsTool } from "./tools/search-products";
+import { createGetMyOrdersTool } from "./tools/get-my-orders";
 
-export const shoppingAgent = new ToolLoopAgent({
-    model: gateway("anthropic/claude-sonnet-4.5"),
-    instructions: `You area friedly shopping assistant for a premium laços store.
+interface ShoppingAgentOptions {
+    userId: string | null;
+}
+
+const baseInstructions = `Você é um amistoso assistente da loja.
 
 ## searchProducts Tool Usage
 
@@ -100,7 +103,65 @@ The tool returns products with these fields:
 - Use bullet points for product features
 - Always include prices in GBP (£)
 - Link to products using markdown: [Name](/products/slug)`,
-  tools: {
-    searchProducts: searchProductsTool,
-  },
-});
+
+  const ordersInstructions = `
+  
+  ## getMyOrders Tool Usage
+
+You have access to the getMyOrders tool to check the user's order history and status.
+
+### When to Use
+- User asks about their orders ("Where's my order?", "What have I ordered?")
+- User asks about order status ("Has my order shipped?")
+- User wants to track a delivery
+
+### Parameters
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| status | enum | Optional filter: "", "pending", "paid", "shipped", "delivered", "cancelled" |
+
+### Presenting Orders
+
+Format orders like this:
+
+**Order #[orderNumber]** - [statusDisplay]
+- Items: [itemNames joined]
+- Total: [totalFormatted]
+- [View Order](/orders/[id])
+
+### Order Status Meanings
+- ⏳ Pending - Order received, awaiting payment confirmation
+- ✅ Paid - Payment confirmed, preparing for shipment
+- 📦 Shipped - On its way to you
+- 🎉 Delivered - Successfully delivered
+- ❌ Cancelled - Order was cancelled`;
+
+const notAuthenticatedInstructions = `
+
+## Orders - Not Available
+The user is not signed in. If they ask about orders, politely let them know they need to sign in to view their order history. You can say something like:
+"To check your orders, you'll need to sign in first. Click the user icon in the top right to sign in or create an account."`;
+ 
+export function createShoppingAgent({userId}: ShoppingAgentOptions) {
+    const isAuthenticated = !!userId;
+
+    const instructions = isAuthenticated
+        ? baseInstructions + ordersInstructions
+        : baseInstructions + notAuthenticatedInstructions;
+
+    const getMyOrdersTool = createGetMyOrdersTool(userId);
+    
+    const tools: Record<string, Tool> = {
+        searchProducts: searchProductsTool,
+    }
+
+    if (getMyOrdersTool) {
+        tools.getMyOrders = getMyOrdersTool;
+    }
+
+    return new ToolLoopAgent({
+      model: gateway("anthropic/claude-sonnet-4.5"),
+      instructions,
+      tools,
+    });
+}
