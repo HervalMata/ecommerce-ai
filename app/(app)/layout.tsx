@@ -5,16 +5,21 @@ import {SanityLive} from "@/sanity/lib/live";
 import {Header} from "@/components/app/Header";
 import {CartSheet} from "@/components/app/CartSheet";
 import { Toaster } from '@/components/ui/sonner';
+import { AppShell } from '@/components/app/AppShell';
+import { ChatSheet } from '@/components/app/ChatSheet';
 
 function Layout({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider>
         <CartStoreProvider>
+          <AppShell>
             <Header />
             <main>{children}</main>
-            <CartSheet />
-            <Toaster position="bottom-left" />
-            <SanityLive />
+          </AppShell>
+          <CartSheet />
+          <ChatSheet />
+          <Toaster position="bottom-left" />
+          <SanityLive />
         </CartStoreProvider>
     </ClerkProvider>
   )
