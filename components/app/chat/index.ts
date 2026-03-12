@@ -4,5 +4,6 @@ export * from "./WelcomeScreen";
 export * from "./LoadingIndicator";
 export * from "./MessageBubble";
 export * from "./MessageContent";
+export * from "./OrderCardWidget";
 export * from "./ProductCardWidget";
 export * from "./ToolCallUI";
