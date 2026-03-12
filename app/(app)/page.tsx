@@ -20,6 +20,7 @@ interface PageProps {
       maxPrice?: string;
       price?: string;
       sort?: string;
+      inStock?: string;
     }>;
 }
 
@@ -36,6 +37,7 @@ export default async function HomePage(
   const maxPrice = Number(params.maxPrice) || 0;
   const price = Number(params.price) || 0;
   const sort = params.sort ?? "";
+  const inStock = params.inStock === "true";
 
   const getQuery = () => {
       if (searchQuery && sort === "relevance") {
@@ -65,6 +67,7 @@ export default async function HomePage(
           minPrice,
           price,
           maxPrice,
+          inStock,
       }
   });
 

@@ -96,7 +96,7 @@ export function ToolCallUI({ toolPart, closeChat }: ToolCallUIProps) {
                 <div className="ml-11 mt-2">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
                         {productResult.products.length} produto
-                        {productResult.products.length !== 1 ? "s" : ""} encontado
+                        {productResult.products.length !== 1 ? "s" : ""} encontrado
                     </p>
                     <div className="space-y-2">
                         {productResult.products.map((product) => (
@@ -115,7 +115,7 @@ export function ToolCallUI({ toolPart, closeChat }: ToolCallUIProps) {
                 <div className="ml-11 mt-2">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
                         {orderResult.orders.length} orde
-                        {orderResult.orders.length !== 1 ? "ns" : "m"} encontado
+                        {orderResult.orders.length !== 1 ? "ns" : "m"} encontrada
                     </p>
                     <div className="space-y-2">
                         {orderResult.orders.map((order) => (
