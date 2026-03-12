@@ -1,8 +1,10 @@
-import { SearchProductResult } from "@/lib/ai/types";
-import { ToolCallPart } from "./types";
+import type { GetMyOrdersResult } from "@/lib/ai/tools/get-my-orders";
+import type { ToolCallPart } from "./types";
+import type { SearchProductResult } from "@/lib/ai/types";
 import { getToolDisplayName } from "./utils";
 import { ProductCardWidget } from "./ProductCardWidget";
-import { Search, CheckCircle, Loader2 } from "lucide-react";
+import { Search, Package, CheckCircle, Loader2 } from "lucide-react";
+import { OrderCardWidget } from "./OrderCardWidget";
 
 interface ToolCallUIProps {
     toolPart: ToolCallPart;
@@ -23,16 +25,35 @@ export function ToolCallUI({ toolPart, closeChat }: ToolCallUIProps) {
             ? String(toolPart.args.query)
             : undefined;
 
-    const result = (toolPart.result || toolPart.output) as SearchProductResult;
+    const orderStatus =
+        toolName === "getMyOrders" && toolPart.args?.status
+            ? String(toolPart.args.status)
+            : undefined;        
 
-    const hasProduct = result?.found && result.products && result.products.length > 0;
+    const result = toolPart.result || toolPart.output;
+    const productResult = result as SearchProductResult | undefined;
+    const orderResult = result as GetMyOrdersResult | undefined;
+
+    const hasProduct = 
+        toolName === "searchProducts" &&
+        productResult?.found && 
+        productResult.products && 
+        productResult.products.length > 0;
+
+    const hasOrders = 
+        toolName === "getMyOrders" &&
+        orderResult?.found && 
+        orderResult.orders && 
+        orderResult.orders.length > 0;    
+
+    const ToolIcon = toolName === "getMyOrders" ? Package : Search;    
 
     return (
         <div className="space-y-2">
             {/* Tool Status Indicator */}
             <div className="flex gap-3">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
-                    <Search className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                    <ToolIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div
                     className={`flex items-center gap-3 rounded-xl px-4 py-2 text-sm ${
@@ -61,22 +82,46 @@ export function ToolCallUI({ toolPart, closeChat }: ToolCallUIProps) {
                                 Query: &quot;{searchQuery}&quot;
                             </span>
                         )}
+                        {orderStatus && (
+                            <span className="text=xs text-zinc-500 dark:text-zinc-400">
+                                Filter: {orderStatus}
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>
 
             {/* Product Results */}
-            {hasProduct && result.products && (
+            {hasProduct && productResult.products && (
                 <div className="ml-11 mt-2">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
-                        {result.products.length} produto
-                        {result.products.length !== 1 ? "s" : ""} encontado
+                        {productResult.products.length} produto
+                        {productResult.products.length !== 1 ? "s" : ""} encontado
                     </p>
                     <div className="space-y-2">
-                        {result.products.map((product) => (
+                        {productResult.products.map((product) => (
                             <ProductCardWidget
                                 key={product.id}
                                 product={product}
+                                onClose={closeChat}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Order Results */}
+            {hasOrders && orderResult.orders && (
+                <div className="ml-11 mt-2">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
+                        {orderResult.orders.length} orde
+                        {orderResult.orders.length !== 1 ? "ns" : "m"} encontado
+                    </p>
+                    <div className="space-y-2">
+                        {orderResult.orders.map((order) => (
+                            <OrderCardWidget
+                                key={order.id}
+                                order={order}
                                 onClose={closeChat}
                             />
                         ))}

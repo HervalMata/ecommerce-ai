@@ -21,6 +21,7 @@ export interface OrderSummary {
     statusDisplay: string;
     itemCount: number;
     itemNames: string[];
+    itemImages: string[];
     createdAt: string | null;
     orderUrl: string;
 }
@@ -93,6 +94,9 @@ export function createGetMyOrdersTool(userId: string | null) {
                         itemCount: order.itemCount ?? 0,
                         itemNames: (order.itemNames ?? []).filter(
                             (name): name is string => name !== null
+                        ),
+                        itemImages: (order.itemImages ?? []).filter(
+                            (url): url is string => url !== null
                         ),
                         createdAt: order.createdAt,
                         orderUrl: `/orders/${order._id}`,
