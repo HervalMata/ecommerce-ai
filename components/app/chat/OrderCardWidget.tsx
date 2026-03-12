@@ -40,7 +40,7 @@ export function OrderCardWidget({ order, onClose }: OrderCardWidgetProps) {
             <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                        <span className="block truncate text-sm font-medium text-zinc-900 transition-clors duration-200 group-hover:text-amber-600 dark:text-zinc-100 dark:group-hover:text-amber-400">
+                        <span className="block truncate text-sm font-medium text-zinc-900 transition-colors duration-200 group-hover:text-amber-600 dark:text-zinc-100 dark:group-hover:text-amber-400">
                             Ordem #{order.orderNumber?.split("-").pop()}
                         </span>
                         {displayItems && (

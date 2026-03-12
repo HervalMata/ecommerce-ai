@@ -41,7 +41,7 @@ const sizeConfig = {
 export function StackedProductImages({ images, totalCount, size = "sm", hoverScale = true }: StackedProductImagesProps) {
     const config = sizeConfig[size];
     const displayImages = images.slice(0, 3);
-    const extraCount = (totalCount ?? images.length) - displayNames.length;
+    const extraCount = (totalCount ?? images.length) - displayImages.length;
 
     const hoverClass = hoverScale
         ? "transition-transform duration-200 group-hover:scale-105"
@@ -60,7 +60,7 @@ export function StackedProductImages({ images, totalCount, size = "sm", hoverSca
     return (
         <div className={`relative flex items-center justify-center ${config.container}`}>
             <div className="relative h-full w-full">
-                {displayNames.map((imageUrl, idx) => (
+                {displayImages.map((imageUrl, idx) => (
                     <div 
                         key={imageUrl}
                         className={`absolute overflow-hidden rounded-lg border-2 border-white bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-700 ${hoverClass}`}
@@ -81,7 +81,7 @@ export function StackedProductImages({ images, totalCount, size = "sm", hoverSca
                         />
                     </div>
                 ))}
-                {extraCount > 0 && displayNames.length > 1 && (
+                {extraCount > 0 && displayImages.length > 1 && (
                     <div
                         className={`absolute flex items-center justify-center rounded-lg border-2 border-white bg-zinc-200 font-medium text-zinc-600 dark:border-zinc-800 dark:bg-zinc-600 dark-text--zinc-300 ${config.fontSize}`}
                         style={{
