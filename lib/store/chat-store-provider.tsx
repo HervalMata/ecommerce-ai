@@ -44,14 +44,22 @@ export const useChatStore = <T,>(selector: (store: ChatStore) => T): T => {
 
 export const useIsChatOpen = () => useChatStore((state) => state.isOpen);
 
+export const usePendingMessage = () => useChatStore((state) => state.pendingMessage);
+
 export const useChatActions = () => {
     const openChat = useChatStore((state) => state.openChat);
+    const openChatWithMessage = useChatStore(
+        (state) => state.openChatWithMessage,
+    );
     const closeChat = useChatStore((state) => state.closeChat);
     const toggleChat = useChatStore((state) => state.toggleChat);
+    const clearPendingMessage = useChatStore((state) => state.clearPendingMessage);
 
     return {
         openChat,
+        openChatWithMessage,
         closeChat,
         toggleChat,
+        clearPendingMessage,
     };
 };

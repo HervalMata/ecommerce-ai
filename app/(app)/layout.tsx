@@ -7,19 +7,22 @@ import {CartSheet} from "@/components/app/CartSheet";
 import { Toaster } from '@/components/ui/sonner';
 import { AppShell } from '@/components/app/AppShell';
 import { ChatSheet } from '@/components/app/ChatSheet';
+import {ChatStoreProvider} from "@/lib/store/chat-store-provider";
 
 function Layout({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider>
         <CartStoreProvider>
-          <AppShell>
-            <Header />
-            <main>{children}</main>
-          </AppShell>
-          <CartSheet />
-          <ChatSheet />
-          <Toaster position="bottom-left" />
-          <SanityLive />
+          <ChatStoreProvider>
+            <AppShell>
+              <Header />
+              <main>{children}</main>
+            </AppShell>
+            <CartSheet />
+            <ChatSheet />
+            <Toaster position="bottom-left" />
+            <SanityLive />
+          </ChatStoreProvider>
         </CartStoreProvider>
     </ClerkProvider>
   )

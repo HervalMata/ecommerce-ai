@@ -19,9 +19,11 @@ export default async function OrdersPage() {
 
     const { data: orders } = await sanityFetch({
         query: ORDERS_BY_USER_QUERY,
-        params: { clerkUserId: userId ?? "" }
+        params: { clerkUserId: userId ?? "" },
+
     });
 
+    console.log(orders)
 
     if (orders.length === 0) {
         return (
@@ -32,7 +34,8 @@ export default async function OrdersPage() {
                         Nenhuma Ordem ainda.
                     </h1>
                     <p className="mt-2 text-zinc-500 dark:text-zinc-400">
-                        Quando você tiver ordens. Elas aparecerão aqui.                    </p>
+                        Quando você tiver ordens. Elas aparecerão aqui.
+                    </p>
                     <Button
                         asChild
                         className="mt-8"
@@ -63,9 +66,9 @@ export default async function OrdersPage() {
                     const status = getOrderStatus(order.status);
                     const StatusIcon = status.icon;
                     const images = (order.itemImages ?? []).filter(
-                        (url): url is string => url !== null,
+                        (url: any): url is string => url !== null,
                     );
-                    
+
                     return (
                         <Link
                             key={order._id}
@@ -75,7 +78,7 @@ export default async function OrdersPage() {
                         >
                             <div className="flex gap-5 p-5">
                                 {/* Left: Product Images Stack */}
-                                <StackedProductImages 
+                                <StackedProductImages
                                     images={images}
                                     totalCount={order.itemCount ?? 0}
                                     size="lg"

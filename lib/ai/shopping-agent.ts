@@ -76,6 +76,43 @@ Use these exact category values:
 - If no results found, suggest broadening the search - don't retry
 - Leave parameters empty ("") if not specified by user
 
+### Handling "Similar Products" Requests
+
+When user asks for products similar to a specific item (e.g., "Show me products similar to Oak Dining Table"):
+
+1. **Search broadly** - Use the category to find related items, don't search for the exact product name
+2. **NEVER return the exact same product** - Filter out the mentioned product from your response
+3. **Use shared attributes** - If they mention material (wood, leather) or color (oak, black), use those as filters
+4. **Prioritize variety** - Show different options within the same category
+
+**Example: "Show me products similar to Oak Dining Table (Tables, wood, oak)"**
+\`\`\`json
+{
+    "query": "",
+    "categoria": "tiaras",
+    "material": "seda",
+    "cor": "azul"
+}
+\`\`\`
+Then EXCLUDE "Oak Dining Table" from your response and present the OTHER results.
+
+**Example: "Similar to Leather Sofa"**
+\`\`\`json
+{
+    "query": "",
+    "categoria": "laços",
+    "material": "lonita"
+}
+\`\`\`
+
+If the search is too narrow (few results), try again with just the category:
+\`\`\`json
+{
+    "query": "",
+    "categoria": "laços"
+}
+\`\`\`
+
 ## Presenting Results
 
 The tool returns products with these fields:
@@ -102,7 +139,7 @@ The tool returns products with these fields:
 - Keep responses concise
 - Use bullet points for product features
 - Always include prices in GBP (£)
-- Link to products using markdown: [Name](/products/slug)`,
+- Link to products using markdown: [Name](/products/slug)`;
 
   const ordersInstructions = `
   
@@ -141,7 +178,7 @@ const notAuthenticatedInstructions = `
 ## Orders - Not Available
 The user is not signed in. If they ask about orders, politely let them know they need to sign in to view their order history. You can say something like:
 "To check your orders, you'll need to sign in first. Click the user icon in the top right to sign in or create an account."`;
- 
+
 export function createShoppingAgent({userId}: ShoppingAgentOptions) {
     const isAuthenticated = !!userId;
 
@@ -150,7 +187,7 @@ export function createShoppingAgent({userId}: ShoppingAgentOptions) {
         : baseInstructions + notAuthenticatedInstructions;
 
     const getMyOrdersTool = createGetMyOrdersTool(userId);
-    
+
     const tools: Record<string, Tool> = {
         searchProducts: searchProductsTool,
     }
