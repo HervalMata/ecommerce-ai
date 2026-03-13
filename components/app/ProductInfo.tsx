@@ -4,6 +4,7 @@ import {PRODUCT_BY_SLUG_QUERYResult} from "@/sanity.types";
 import Link from "next/link";
 import { StockBadge } from "./StockBadge";
 import { AddToCardButton } from "./AddToCartButton";
+import {AskAIASimilarButton} from "@/components/app/AskAIASimilarButton";
 
 interface ProductInfoProps {
     product: NonNullable<PRODUCT_BY_SLUG_QUERYResult>;
@@ -46,13 +47,14 @@ export function ProductInfo(
             {/* Stock & Add To Cart */}
             <div>
                 <StockBadge productId={product._id} stock={product.stock ?? 0} />
-                <AddToCardButton 
+                <AddToCardButton
                     productId={product._id}
                     name={product.name ?? "Produto Desconhecido"}
                     price={product.price ?? 0}
                     image={imageUrl ?? undefined}
                     stock={product.stock ?? 0}
                 />
+                <AskAIASimilarButton productName={product.name ?? "Este Produto"} />
             </div>
 
             {/* Metadata */}

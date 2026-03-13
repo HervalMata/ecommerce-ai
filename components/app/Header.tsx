@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {ShoppingBag, User, Package} from "lucide-react";
+import {ShoppingBag, User, Package, Sparkles} from "lucide-react";
 import {useCartActions, useTotalItems} from "@/lib/store/cart-store-provider";
 import {SignedIn, SignedOut, UserButton, SignInButton} from "@clerk/nextjs";
-import { useIsChatOpen } from "@/lib/store/chat-store-provider";
+import {useChatActions, useIsChatOpen} from "@/lib/store/chat-store-provider";
 
 export function Header() {
     const { openCart } = useCartActions();
+    const { openChat} = useChatActions();
     const isChatOpen = useIsChatOpen();
     const totalItems = useTotalItems();
 
@@ -39,17 +40,17 @@ export function Header() {
                     {/* AI Shopping Assistant */}
                     {!isChatOpen && (
                         <Button
-                            onClick={openCart}
+                            onClick={openChat}
                             className="gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white
                              shadow-md shadow-amber-200/50 transition-all hover:from-amber-600
                               hover:to-orange-600 hover:shadow-lg hover:shadow-MBER-300/50
                                dark:shadow-amber-900/30 dark:hover:shadow-amber-800/40"
                         >
-                            <Spakles className="h-4 w-4" />
+                            <Sparkles className="h-4 w-4" />
                             <span className="text-sm font-medium">Pergunte a IA</span>
                         </Button>
                     )}
-                    
+
                     {/* Cart Button */}
                     <Button
                         variant="ghost"

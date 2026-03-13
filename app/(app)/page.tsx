@@ -9,6 +9,7 @@ import {ProductGrid} from "@/components/app/ProductGrid";
 import {ProductGridSkeleton} from "@/components/app/ProductGridSkeleton";
 import {Suspense} from "react";
 import {ProductFilters} from "@/components/app/ProductFilters";
+import {CategoryTiles} from "@/components/app/CategoryTiles";
 
 interface PageProps {
     searchParams: Promise<{
@@ -82,11 +83,19 @@ export default async function HomePage(
             <div className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
                 <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                     <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-                        Todos os Produtos
+                        Mostrar {categorySlug ? categorySlug : "Todos os Produtos"}
                     </h1>
                     <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                         Laços Maravilhosos para a sua cabeça
                     </p>
+                </div>
+
+                {/* Category Tiles - Full Width */}
+                <div className="mt-6">
+                    <CategoryTiles
+                        categories={categories}
+                        activeCategory={categorySlug || undefined}
+                    />
                 </div>
             </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, FormEvent } from "react";
-import { useChatActions, useIsChatOpen } from "@/lib/store/chat-store-provider";
+import { useChatActions, useIsChatOpen, usePendingMessage } from "@/lib/store/chat-store-provider";
 import { Sparkles, Send, Loader2, X, Bot } from "lucide-react";
 import { useChat } from "@ai-sdk/react";
 import { Button } from "../ui/button";
@@ -11,7 +11,8 @@ import { useAuth } from "@clerk/nextjs";
 
 export function ChatSheet() {
     const isOpen = useIsChatOpen();
-    const { closeChat } = useChatActions();
+    const { closeChat, clearPendingMessage } = useChatActions();
+    const pendingMessage = usePendingMessage();
     const { isSignedIn } = useAuth();
     const [input, setInput] = useState("");
     const messageEndRef = useRef<HTMLDivElement>(null);
@@ -22,6 +23,13 @@ export function ChatSheet() {
     useEffect(() => {
         messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, isLoading]);
+
+    useEffect(() => {
+        if (isOpen && pendingMessage && !isLoading) {
+            sendMessage({ text: pendingMessage });
+            clearPendingMessage();
+        }
+    }, []);
 
     const handleSubimt = (e: FormEvent) => {
         e.preventDefault();
@@ -36,7 +44,7 @@ export function ChatSheet() {
     return (
         <>
             {/* Backdrop - only visible on mobile/tablet (< xl) */}
-            <div 
+            <div
                 className="fixed inset-0 z-40 bg-black/50 xl:hidden"
                 onClick={closeChat}
                 aria-hidden="true"
@@ -77,7 +85,7 @@ export function ChatSheet() {
                                     <div key={message.id} className="space-y-3">
                                         {/* Tool call indicators */}
                                         {hasTools && toolParts.map((toolPart) => (
-                                            <ToolCallUI 
+                                            <ToolCallUI
                                                 key={`tool-${message.id}-${toolPart.toolCallId}`}
                                                 toolPart={toolPart}
                                                 closeChat={closeChat}
@@ -86,7 +94,7 @@ export function ChatSheet() {
 
                                         {/* Message Content */}
                                         {hasContent && (
-                                            <MessageBubble 
+                                            <MessageBubble
                                                 role={message.role}
                                                 content={content}
                                                 closeChat={closeChat}
@@ -122,7 +130,7 @@ export function ChatSheet() {
                 {/* Input */}
                 <div className="border-t border-zinc-200 px-4 py-4 dark:border-zinc-800">
                     <form onSubmit={handleSubimt} className="flex gap-2">
-                        <Input 
+                        <Input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder="Pergunte algo sobre nossos laços..."
