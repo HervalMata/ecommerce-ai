@@ -6,7 +6,7 @@ import { z } from "zod";
 
 const getMyOrdersSchema = z.object({
     status: z
-        .enum(["", "pending", "paid", "shipped", "delivered", "cancelled"])
+        .enum(["", "paid", "shipped", "delivered", "cancelled"])
         .optional()
         .default("")
         .describe("Filtrar ordens por status (deixe em branco para todas as ordens)"),
@@ -71,13 +71,12 @@ export function createGetMyOrdersTool(userId: string | null) {
                             : "Você nã tem nenhuma ordem ainda.",
                         orders: [],
                         totalOrders: 0,
-                        isAuthenticated: true,    
+                        isAuthenticated: true,
                     } satisfies GetMyOrdersResult;
                 }
 
                 const formattedOrders: OrderSummary[] = filteredOrders.map((order) => {
                     const statusDisplayMap: Record<string, string> = {
-                        pending: "⏳ Pendente",
                         paid: "✅ Paga",
                         shipped: "📦 Enviada",
                         delivered: "🎉 Entregue",
@@ -108,7 +107,7 @@ export function createGetMyOrdersTool(userId: string | null) {
                     message: `Encontrada ${filteredOrders.length} orde${filteredOrders.length === 1 ? "m" : "ns"}.`,
                     orders: formattedOrders,
                     totalOrders: filteredOrders.length,
-                    isAuthenticated: true,   
+                    isAuthenticated: true,
                 } satisfies GetMyOrdersResult;
             } catch (error) {
                 console.error("[GetMyOrders] Error: ", error);

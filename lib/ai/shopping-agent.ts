@@ -89,9 +89,9 @@ When user asks for products similar to a specific item (e.g., "Show me products 
 \`\`\`json
 {
     "query": "",
-    "categoria": "tiaras",
-    "material": "seda",
-    "cor": "azul"
+    "category": "tiaras",
+    "material": "Seda",
+    "color": "Azul"
 }
 \`\`\`
 Then EXCLUDE "Oak Dining Table" from your response and present the OTHER results.
@@ -100,8 +100,8 @@ Then EXCLUDE "Oak Dining Table" from your response and present the OTHER results
 \`\`\`json
 {
     "query": "",
-    "categoria": "laços",
-    "material": "lonita"
+    "category": "Laços",
+    "material": "Lonita"
 }
 \`\`\`
 
@@ -109,7 +109,7 @@ If the search is too narrow (few results), try again with just the category:
 \`\`\`json
 {
     "query": "",
-    "categoria": "laços"
+    "category": "Laços"
 }
 \`\`\`
 
