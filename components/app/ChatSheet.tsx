@@ -29,7 +29,7 @@ export function ChatSheet() {
             sendMessage({ text: pendingMessage });
             clearPendingMessage();
         }
-    }, []);
+    }, [isOpen, pendingMessage, isLoading, sendMessage, clearPendingMessage]);
 
     const handleSubimt = (e: FormEvent) => {
         e.preventDefault();
