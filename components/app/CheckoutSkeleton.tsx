@@ -35,31 +35,30 @@ export function CheckoutSkeleton() {
                             ))}
                         </div>
                     </div>
-                </div>
-
-                {/* Order Total & Checkout */}
-                <div className="lg:col-span-2">
-                    <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-                        <Skeleton className="h-5 w-36" />
-                        <div className="mt-6 space-y-4">
-                            <div className="flex justify-between">
-                                <Skeleton className="h-4 w-16" />
-                                <Skeleton className="h-4 w-16" />
-                            </div>
-                            <div className="flex justify-between">
-                                <Skeleton className="h-4 w-16" />
-                                <Skeleton className="h-4 w-36" />
-                            </div>
-                            <div className="border-t border-zinc-200 pt-4 dark:border-zinc-800">
+                    {/* Order Total & Checkout */}
+                    <div className="lg:col-span-2">
+                        <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+                            <Skeleton className="h-5 w-36" />
+                            <div className="mt-6 space-y-4">
                                 <div className="flex justify-between">
-                                    <Skeleton className="h-5 w-12" />
-                                    <Skeleton className="h-5 w-20" />
+                                    <Skeleton className="h-4 w-16" />
+                                    <Skeleton className="h-4 w-16" />
+                                </div>
+                                <div className="flex justify-between">
+                                    <Skeleton className="h-4 w-16" />
+                                    <Skeleton className="h-4 w-36" />
+                                </div>
+                                <div className="border-t border-zinc-200 pt-4 dark:border-zinc-800">
+                                    <div className="flex justify-between">
+                                        <Skeleton className="h-5 w-12" />
+                                        <Skeleton className="h-5 w-20" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <Skeleton className="mt-6 h-12 w-full" />
-                        <Skeleton className="mx-auto mt-4 h-3 w-56" />
+                            <Skeleton className="mt-6 h-12 w-full" />
+                            <Skeleton className="mx-auto mt-4 h-3 w-56" />
+                        </div>
                     </div>
                 </div>
             </div>
