@@ -30,7 +30,7 @@ export default function HomeLoading() {
                     <main className="flex-1">
                         {/* Results Count */}
                         <div className="mb-6 flex items-center justify-between">
-                            <Skeleton />
+                            <Skeleton className="h-4 w-32" />
                         </div>
 
                         <ProductGridSkeleton />
