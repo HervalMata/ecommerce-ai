@@ -29,7 +29,7 @@ function AdminDashboard() {
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm: sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:itens-center sm:justify-between">
           <div>
               <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 sm:text-3xl">
                 AdminDashboard
