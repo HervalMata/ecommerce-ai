@@ -146,6 +146,7 @@ export function RevertButtonContent(
                 variant="outline"
                 size={size}
                 disabled
+                aria-label="Alterações deacartadas"
             >
                 <Check className="h-4 w-4 text-green-500" />
             </Button>
@@ -160,6 +161,7 @@ export function RevertButtonContent(
                     size={size}
                     onClick={handleRevert}
                     disabled={isReverting}
+                    aria-label="Descartar Alterações"
                 >
                     {isReverting ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -177,7 +179,7 @@ export function RevertButtonContent(
 
 export function RevertButton(props: RevertButtonProps) {
     return (
-        <Suspense fallback={null}>
+        <Suspense fallback={<Skeleton className="h-12 w-16" /> }>
             <RevertButtonContent {...props} />
         </Suspense>
     );

@@ -1,7 +1,7 @@
 "use client";
 
 import {DocumentHandle, useDocument, useEditDocument} from "@sanity/sdk-react";
-import {Skeleton} from "@sanity/ui";
+import {Skeleton} from "@/components/ui/skeleton";
 import {Suspense} from "react";
 import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
@@ -22,6 +22,7 @@ function StockInputContent(handle: StockInputProps) {
         <Input
             type="number"
             min={0}
+            step={1}
             value={stockValue}
             onChange={(e) => editStock(parseInt(e.target.value) || 0)}
             className={cn(

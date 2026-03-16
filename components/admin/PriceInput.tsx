@@ -2,7 +2,7 @@
 
 import {DocumentHandle, useDocument, useEditDocument} from "@sanity/sdk-react";
 import {Input} from "@/components/ui/input";
-import {Skeleton} from "@sanity/ui";
+import {Skeleton} from "@/components/ui/skeleton";
 import {Suspense} from "react";
 
 interface PriceInputProps extends DocumentHandle{
@@ -20,10 +20,14 @@ function PriceInputContent(handle: PriceInputProps) {
             </span>
             <Input
                 type="number"
-                min={0}
+                min={0.01}
                 step={0.01}
-                value={(price as number) ?? 0}
-                onChange={(e) => editPrice(parseFloat(e.target.value) || 0)}
+                value={typeof price === "number" ? price : ""}
+                onChange={(e) => {
+                    const raw = e.target.value;
+                    if (raw === "") return;
+                    editPrice(Number.parseFloat(raw));
+                }}
                 className="h-8 w-24 text-right"
 
             />

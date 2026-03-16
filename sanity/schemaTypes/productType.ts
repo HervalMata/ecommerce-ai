@@ -1,4 +1,4 @@
-import {defineField, defineType} from "@sanity/types";
+import {defineField, defineType} from "sanity";
 import {PackageIcon} from "@sanity/icons";
 
 export const productType = defineType({
