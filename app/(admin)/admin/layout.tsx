@@ -24,8 +24,7 @@ const navItems = [
         href: "/admin/orders",
         icon: ShoppingCart,
     },
-]
-
+];
 
 function AdminLayout({ children }: { children: ReactNode }) {
     const pathname = usePathname();
@@ -60,7 +59,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
                 </Button>
             </div>
 
-            {/* Mobile Overlay */}
+             Mobile Overlay
             {sidebarOpen && (
                 <button
                     type="button"
@@ -70,16 +69,16 @@ function AdminLayout({ children }: { children: ReactNode }) {
                 />
             )}
 
-            {/* Sidebar */}
+             Sidebar
             <aside
                 className={cn(
-                    "fixed left-0 top-0 z-50 h-screen border-r border-zinc-200 bg-white transition-transform dark:border-zinc-800 dark:bg-zinc-900",
+                    "fixed left-0 top-0 z-50 h-screen w-64 border-r border-zinc-200 bg-white transition-transform dark:border-zinc-800 dark:bg-zinc-900",
                     sidebarOpen ? "translate-x-0" : "-translate-x-full",
                     "lg:translate-x-0"
                 )}
             >
                 <div className="flex h-full flex-col">
-                    {/* Logo */}
+                     Logo
                     <div className="flex h-14 items-center border-b border-zinc-200 px-6 dark:border-zinc-800">
                         <Link
                             href="/admin"
@@ -97,8 +96,8 @@ function AdminLayout({ children }: { children: ReactNode }) {
                         </Link>
                     </div>
 
-                    {/* Navigation */}
-                    <nav className="flex-1 space-1 px-3 py-4">
+                     Navigation
+                    <nav className="flex-1 space-y-1 px-3 py-4">
                         {navItems.map((item) => {
                             const isActive =
                                 item.href === "/admin"
@@ -124,7 +123,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
                         })}
                     </nav>
 
-                    {/* Footer */}
+                     Footer
                     <div className="space-y-3 border-t border-zinc-200 px-3 py-4 dark:border-zinc-800">
                         <Link
                             href="/studio"

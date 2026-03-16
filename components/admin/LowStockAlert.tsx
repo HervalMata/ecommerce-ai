@@ -140,8 +140,8 @@ function LowStockAlertSkeleton() {
 export function LowStockAlert() {
     return (
         <div className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="flex items-center gap-2 border-b border-zinc-200 px-4 dark:border-zinc-800r">
-                <AlertTriangle className="h-5 w-5 text-amber--500" />
+            <div className="flex items-center gap-2 border-b border-zinc-200 px-4 dark:border-zinc-800">
+                <AlertTriangle className="h-5 w-5 text-amber-500" />
                 <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">
                     Alerta de Baixo Estoque
                 </h2>

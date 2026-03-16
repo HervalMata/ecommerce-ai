@@ -35,7 +35,7 @@ function OrderRow(handle: DocumentHandle) {
 
     return (
         <Link
-            href={`/admin/inventory/${handle.documentId}`}
+            href={`/admin/orders/${handle.documentId}`}
             className="flex items-center gap-3 rounded-lg border border-zinc-100 bg-zinc-50 p-3 transition-colors
                         hover:border-zinc-200 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800/50
                         dark:hover:border-zinc-700 dark:hover:bg-zinc-800"
@@ -45,7 +45,7 @@ function OrderRow(handle: DocumentHandle) {
                     #{data.orderNumber?.split("-").pop()}
                 </p>
                 <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                    #{data.email}
+                    {data.email}
                 </p>
             </div>
             <div className={"flex items-center gap-3"}>
@@ -125,7 +125,7 @@ function RecentOrdersSkeleton() {
 export function RecentOrders() {
     return (
         <div className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="flex items-center gap-2 border-b border-zinc-200 px-4 dark:border-zinc-800r">
+            <div className="flex items-center gap-2 border-b border-zinc-200 px-4 dark:border-zinc-800">
                 <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">
                     Ordens Recentes
                 </h2>
