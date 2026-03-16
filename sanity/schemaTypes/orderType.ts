@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from "@sanity/types";
+import {defineArrayMember, defineField, defineType} from "sanity";
 import {BasketIcon} from "@sanity/icons";
 import {title} from "valibot";
 

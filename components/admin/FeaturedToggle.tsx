@@ -1,7 +1,7 @@
 "use client";
 
 import {DocumentHandle, useDocument, useEditDocument} from "@sanity/sdk-react";
-import {Skeleton} from "@sanity/ui";
+import {Skeleton} from "@/components/ui/skeleton";
 import {Suspense} from "react";
 import {Button} from "@/components/ui/button";
 import {Star} from "lucide-react";

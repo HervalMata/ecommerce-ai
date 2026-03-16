@@ -63,9 +63,10 @@ function ProductListContent(
             </div>
         );
     }
+
     return (
         <>
-            <div className="overflow-hidden rounde-xl border border-zonc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
@@ -107,7 +108,7 @@ function ProductListContent(
 
 function ProductListSkeleton() {
     return (
-        <div className="overflow-hidden rounde-xl border border-zonc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
             <div className="overflow-x-auto">
                 <Table>
                     <TableHeader>
@@ -121,7 +122,7 @@ function ProductListSkeleton() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {[1, 2, 3, 4, 5].map((i) => (
+                        {[1, 2, 3, 4, 5].map((i: number) => (
                             <ProductRowSkeleton key={i} />
                         ))}
                     </TableBody>
@@ -139,14 +140,18 @@ function InventoryContent() {
     const apply = useApplyDocumentActions();
 
     const handleCreateProduct = () => {
-        startTransition(async () => {
-            const newDocHandle = createDocumentHandle({
-                documentId: crypto.randomUUID(),
-                documentType: "product",
+        try {
+            startTransition(async () => {
+                const newDocHandle = createDocumentHandle({
+                    documentId: crypto.randomUUID(),
+                    documentType: "product",
+                });
+                await apply(createDocument(newDocHandle));
+                router.push(`/admin/inventory/${newDocHandle.documentId}`);
             });
-            await apply(createDocument(newDocHandle));
-            router.push(`/admin/inventory/${newDocHandle.documentId}`);
-        });
+        } catch (error) {
+            console.error("Falha ao criar produto", error);
+        }
     };
 
     return (
