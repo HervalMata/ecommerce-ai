@@ -140,18 +140,19 @@ function InventoryContent() {
     const apply = useApplyDocumentActions();
 
     const handleCreateProduct = () => {
-        try {
             startTransition(async () => {
-                const newDocHandle = createDocumentHandle({
-                    documentId: crypto.randomUUID(),
-                    documentType: "product",
-                });
-                await apply(createDocument(newDocHandle));
-                router.push(`/admin/inventory/${newDocHandle.documentId}`);
+                try {
+                    const newDocHandle = createDocumentHandle({
+                        documentId: crypto.randomUUID(),
+                        documentType: "product",
+                    });
+                    await apply(createDocument(newDocHandle));
+                    router.push(`/admin/inventory/${newDocHandle.documentId}`);
+                } catch (error) {
+                    console.error("Falha ao criar produto", error);
+                }
             });
-        } catch (error) {
-            console.error("Falha ao criar produto", error);
-        }
+
     };
 
     return (

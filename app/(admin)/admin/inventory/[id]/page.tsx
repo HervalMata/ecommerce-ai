@@ -92,7 +92,7 @@ function StockEditor(handle: DocumentHandle) {
             step="1"
             min="0"
             value={(stock as number) ?? 0}
-            onChange={(e) => editStock(parseFloat(e.target.value) || 0)}
+            onChange={(e) => editStock(parseInt(e.target.value) || 0)}
             placeholder="Estoque do Produto"
         />
     );
@@ -108,7 +108,7 @@ function MaterialEditor(handle: DocumentHandle) {
             onValueChange={(value) => editMaterial(value)}
         >
             <SelectTrigger>
-                <SelectValue placeholder="Selecione o materiakl" />
+                <SelectValue placeholder="Selecione o material" />
             </SelectTrigger>
             <SelectContent>
                 {MATERIALS.map((m) => (
@@ -134,7 +134,7 @@ function ColorEditor(handle: DocumentHandle) {
                 <SelectValue placeholder="Selecione a cor" />
             </SelectTrigger>
             <SelectContent>
-                {MATERIALS.map((c) => (
+                {COLORS.map((c) => (
                     <SelectItem key={c.value} value={c.value}>
                         {c.label}
                     </SelectItem>
@@ -202,7 +202,7 @@ function ProductStoreLink(handle: DocumentHandle) {
             href={`/products/${slug}`}
             target="_blank"
             className="flex items-center justify-center gap-1 text-sm text-zinc-600
-                        hover:textr-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                        hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
         >
             Vê na loja
             <ExternalLink className="h-3.5 w-3.5" />
@@ -270,7 +270,7 @@ function ProductDetailContent({handle}: {handle: DocumentHandle}) {
                     <div className="rounded-xl border border-zinc-200 bg-white p-4
                                     dark:border-zinc-800 dark:bg-zinc-900 sm:p-6">
                         <h2 className="mb-4 font-semibold text-zinc-900 dark:text-zinc-100">
-                            Informnações Básicas
+                            Informações Básicas
                         </h2>
                         <div className="space-y-4">
                             <div className="space-y-2">
@@ -357,7 +357,7 @@ function ProductDetailContent({handle}: {handle: DocumentHandle}) {
                                         Produto em Destaque
                                     </p>
                                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                                        Mostraer na página principal a promoções
+                                        Mostrar na página principal a promoções
                                     </p>
                                 </div>
                                 <Suspense fallback={<Skeleton className="h-6 w-11" /> }>
@@ -410,7 +410,7 @@ function ProductDetailContent({handle}: {handle: DocumentHandle}) {
                             href={`/studio/structure/product:${handle.documentId}`}
                             target="_blank"
                             className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-zinc-900
-                                        hover-text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                        hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300"
                         >
                             Abrir no Studio
                             <ExternalLink className="h-3.5 w-3.5" />

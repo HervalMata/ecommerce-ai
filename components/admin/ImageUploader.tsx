@@ -82,7 +82,7 @@ function ImageUploaderContent(handle: DocumentHandle) {
 
     const handleRemoveImage = (keyToRemove: string) => {
         const updatedImages = currentImages.filter(
-            (img) => img._key === keyToRemove,
+            (img) => img._key !== keyToRemove,
         );
         editImages(updatedImages.length > 0 ? updatedImages : null);
     };
@@ -201,7 +201,7 @@ function ImageThumbnail(
             const [, id, dimensions, format] = match;
             imageUrl =
                 `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}
-                /${process.env.NEST_PUBLIC_SANITY_DATASET}/${id}-${dimensions}.${format}`;
+                /${process.env.NEXT_PUBLIC_SANITY_DATASET}/${id}-${dimensions}.${format}`;
         }
     }
 
@@ -277,7 +277,7 @@ function ImageUploaderSkeleton() {
     return (
         <div className="space-y-4">
             <Skeleton className="w-full h-10" />
-            <div>
+            <div className="grid grid-cols-1 gap-3">
                 <Skeleton className="aspect-square rounded-lg" />
                 <Skeleton className="aspect-square rounded-lg" />
             </div>

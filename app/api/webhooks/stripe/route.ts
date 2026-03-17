@@ -74,7 +74,7 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
         const {
             clerkUserId,
             userEmail,
-            sanityCustumerId,
+            sanityCustomerId,
             productIds: productIdsString,
             quantities: quantitiesString,
         } = session.metadata ?? {};
@@ -119,20 +119,23 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
         const order = await writeClient.create({
             _type: "order",
             orderNumber,
-            ...(sanityCustumerId && {
+            ...(sanityCustomerId && {
                 customer: {
                     _type: "reference",
-                    _ref: sanityCustumerId,
+                    _ref: sanityCustomerId,
                 },
             }),
             clerkUserId,
             email: userEmail ?? session.customer_details?.email ?? "",
+            items: orderItems,
             total:(session.amount_total ?? 0) / 100,
             status: "paid",
             stripePaymentId,
             address,
             createdAt: new Date().toISOString(),
         });
+
+        console.log(`Ordem criada: ${order._id} (${orderNumber})`)
 
         await productIds
             .reduce(

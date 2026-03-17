@@ -5,14 +5,14 @@ import {Suspense, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Check, Loader2, Save, Undo2} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton";
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
 interface PublishButtonProps extends DocumentHandle {
     variant?: "default" | "outline" | "ghost";
     size?: "default" | "sm" | "lg" | "icon";
 }
 
-export function PublishButtonContent(
+function PublishButtonContent(
     {
         variant = "default",
         size = "default",
@@ -103,7 +103,7 @@ interface RevertButtonProps extends DocumentHandle {
     size?: "default" | "sm" | "lg" | "icon";
 }
 
-export function RevertButtonContent(
+function RevertButtonContent(
     {
         size = "default",
         ...handle
@@ -146,7 +146,7 @@ export function RevertButtonContent(
                 variant="outline"
                 size={size}
                 disabled
-                aria-label="Alterações deacartadas"
+                aria-label="Alterações descartadas"
             >
                 <Check className="h-4 w-4 text-green-500" />
             </Button>
@@ -154,26 +154,28 @@ export function RevertButtonContent(
     }
 
     return (
-        <Tooltip>
-            <TooltipTrigger asChild>
-                <Button
-                    variant="destructive"
-                    size={size}
-                    onClick={handleRevert}
-                    disabled={isReverting}
-                    aria-label="Descartar Alterações"
-                >
-                    {isReverting ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                        <Undo2 className="h-4 w-4" />
-                    )}
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-                <p>Descartar Alterações!</p>
-            </TooltipContent>
-        </Tooltip>
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button
+                        variant="destructive"
+                        size={size}
+                        onClick={handleRevert}
+                        disabled={isReverting}
+                        aria-label="Descartar Alterações"
+                    >
+                        {isReverting ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                            <Undo2 className="h-4 w-4" />
+                        )}
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Descartar Alterações!</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
     );
 }
 
