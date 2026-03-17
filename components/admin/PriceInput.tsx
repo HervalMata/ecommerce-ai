@@ -26,7 +26,9 @@ function PriceInputContent(handle: PriceInputProps) {
                 onChange={(e) => {
                     const raw = e.target.value;
                     if (raw === "") return;
-                    editPrice(Number.parseFloat(raw));
+                    const parsed = Number.parseFloat(raw);
+                    if (Number.isNaN(parsed)) return;
+                    editPrice(parsed);
                 }}
                 className="h-8 w-24 text-right"
 

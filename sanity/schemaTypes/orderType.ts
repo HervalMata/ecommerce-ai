@@ -133,9 +133,9 @@ export const orderType = defineType({
                     type: "string",
                 }),
                 defineField({
-                    name: "line1",
-                    type: "postCode",
-                    title: "PostCode",
+                    name: "postcode",
+                    type: "string",
+                    title: "Postcode",
                 }),
                 defineField({
                     name: "country",

@@ -93,8 +93,9 @@ function DeleteButtonContent(
                             asChild
                         >
                             <Link
-                                href={`/studio/structure/${handle.documentType}:${handle}`}
+                                href={`/studio/structure/${handle.documentType}:${baseId}`}
                                 target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 <Trash2 className="h-4 w-4" />
                                 Remover do Studio
@@ -104,7 +105,7 @@ function DeleteButtonContent(
                     <TooltipContent>
                         <p>
                             Este produto é referenciado para {orderCount} orde
-                            {orderCount !== 1 ? "m" : "ns"}
+                            {orderCount !== 1 ? "ns" : "m"}
                         </p>
                     </TooltipContent>
                 </Tooltip>
